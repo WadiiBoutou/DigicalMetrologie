@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
+/* Class-based dark mode (Tailwind v4) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme tokens — toggled via `html.dark` + ThemeToggle / localStorage */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --app-bg: #f8f0da;
+  --app-surface: #ffffff;
+  --app-surface-muted: #f8f0da;
+  --app-text: #254633;
+  --app-body: #0a0a0a;
+  --app-border: #254633;
+  --app-muted: #daa971;
+  --app-footer-bg: #254633;
+  --app-shadow: #254633;
+  --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+  --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+  --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  --app-blueprint-line: rgba(218, 169, 113, 0.22);
+  --app-blueprint-line-90: rgba(218, 169, 113, 0.2);
+  --app-body-grid: rgba(218, 169, 113, 0.2);
+  --tech-icon-bg: #f8f0da;
+  --tech-icon-shadow: #254633;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --app-bg: #121d18;
+  --app-surface: #254633;
+  --app-surface-muted: #1a2a22;
+  --app-text: #f8f0da;
+  --app-body: #f8f0da;
+  --app-border: #daa971;
+  --app-muted: #daa971;
+  --app-footer-bg: #0d1612;
+  --app-shadow: rgba(0, 0, 0, 0.72);
+  --app-shadow-hard: 5px 5px 0px rgba(0, 0, 0, 0.78);
+  --app-shadow-hard-sm: 3px 3px 0px rgba(0, 0, 0, 0.65);
+  --app-shadow-hard-hover: 7px 7px 0px rgba(0, 0, 0, 0.82);
+  /* Radar / oscilloscope grid */
+  --app-blueprint-line: rgba(37, 70, 51, 0.35);
+  --app-blueprint-line-90: rgba(179, 38, 47, 0.12);
+  --app-body-grid: rgba(37, 70, 51, 0.18);
+  --tech-icon-bg: #1e3228;
+  --tech-icon-shadow: rgba(0, 0, 0, 0.75);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Hard shadows: mirror on X for RTL (bottom-left instead of bottom-right) */
+html[dir="rtl"] {
+  --app-shadow-hard: -4px 4px 0px var(--app-shadow);
+  --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
+  --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+}
+
+html.dark[dir="rtl"] {
+  --app-shadow-hard: -5px 5px 0px rgba(0, 0, 0, 0.78);
+  --app-shadow-hard-sm: -3px 3px 0px rgba(0, 0, 0, 0.65);
+  --app-shadow-hard-hover: -7px 7px 0px rgba(0, 0, 0, 0.82);
+}
+
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-alexandria), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-alexandria), ui-monospace, SFMono-Regular, monospace;
+  --font-styrene: "Styrene A Medium", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #b3262f;
+  --color-tech-bg: var(--app-bg);
+  --color-tech-surface: var(--app-surface);
+  --color-tech-text: var(--app-text);
+  --color-tech-body: var(--app-body);
+  --color-tech-border: var(--app-border);
+  --color-tech-muted: var(--app-muted);
+  --color-tech-footer: var(--app-footer-bg);
+  /* Solid brand green (labels, legacy utilities) */
+  --color-tech-brand: #254633;
+
+  --shadow-hard: var(--app-shadow-hard);
+  --shadow-hard-sm: var(--app-shadow-hard-sm);
+  --shadow-hard-hover: var(--app-shadow-hard-hover);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    overflow-x: clip;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-tech-bg font-sans antialiased text-tech-body;
+    overflow-x: clip;
+    background-image:
+      linear-gradient(var(--app-body-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--app-body-grid) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-cairo), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  html[dir="rtl"] .font-mono {
+    font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-tech-text;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .blueprint-bg {
+    background-image:
+      linear-gradient(var(--app-blueprint-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--app-blueprint-line-90) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /** Product & catalogue imagery — tone down glare on dark UI */
+  .product-image {
+    @apply dark:brightness-[0.85] dark:contrast-110;
+  }
 }
