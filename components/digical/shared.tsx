@@ -469,7 +469,11 @@ export function Footer() {
           <h4 className="mb-4 font-bold uppercase">{t("contactSection")}</h4>
           <ul className="space-y-2 text-sm text-tech-muted">
             <li>{t("contactAgency")}</li>
-            <li>+212661406490</li>
+            <li>
+              <span dir="ltr" className="inline-block [unicode-bidi:isolate]">
+                +212661406490
+              </span>
+            </li>
           </ul>
         </div>
       </div>
