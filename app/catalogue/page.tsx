@@ -33,7 +33,7 @@ function CatalogContent({
   const [page, setPage] = useState(1);
   const perPage = 9;
   const { t, isArabic } = useDigicalI18n();
-  const sectorActiveShadow = isArabic ? "[box-shadow:-2px_2px_0px_#254633]" : "[box-shadow:2px_2px_0px_#254633]";
+  const sectorActiveShadow = isArabic ? "[box-shadow:-2px_2px_0px_var(--app-shadow)]" : "[box-shadow:2px_2px_0px_var(--app-shadow)]";
 
   const sectorContent = {
     tous: { heading: t("catHeadingTous"), intro: t("catIntroTous") },
@@ -128,9 +128,9 @@ function CatalogContent({
                 setPage(1);
               }}
               className={cn(
-                "flex h-10 items-center border border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
+                "flex h-10 items-center rounded-xl border-2 border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
                 sector === "tous"
-                  ? cn("bg-primary text-white", sectorActiveShadow)
+                  ? cn("bg-primary text-primary-foreground", sectorActiveShadow)
                   : "bg-tech-surface hover:bg-tech-bg",
               )}
             >
@@ -142,9 +142,9 @@ function CatalogContent({
                 setPage(1);
               }}
               className={cn(
-                "flex h-10 items-center border border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
+                "flex h-10 items-center rounded-xl border-2 border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
                 sector === "industriel"
-                  ? cn("bg-black text-white", sectorActiveShadow)
+                  ? cn("brutal-on-dark bg-black text-white", sectorActiveShadow)
                   : "bg-tech-surface hover:bg-tech-bg",
               )}
             >
@@ -156,9 +156,12 @@ function CatalogContent({
                 setPage(1);
               }}
               className={cn(
-                "flex h-10 items-center border border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
+                "flex h-10 items-center rounded-xl border-2 border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
                 sector === "agricole"
-                  ? cn("border-tech-muted bg-tech-text text-white dark:text-tech-brand", sectorActiveShadow)
+                  ? cn(
+                      "brutal-surface-invert border-tech-muted bg-tech-text text-white dark:text-tech-brand",
+                      sectorActiveShadow,
+                    )
                   : "bg-tech-surface hover:bg-tech-bg",
               )}
             >
@@ -205,7 +208,7 @@ function CatalogContent({
                     setResolutionMax(Math.max(...vals));
                   }
                 }}
-                className="mt-2 h-10 w-full border border-tech-border bg-tech-surface px-3 font-mono text-[10px] font-bold uppercase focus:border-primary focus:ring-0"
+                className="mt-2 h-10 w-full rounded-xl border-2 border-tech-border bg-tech-surface px-3 font-mono text-[10px] font-bold uppercase focus:border-primary focus:ring-0"
               >
                 <option value="all">{t("catAllUnits")}</option>
                 {availableUnits.map((unit) => (
@@ -235,7 +238,7 @@ function CatalogContent({
         </div>
         
         <div className="hidden flex-col gap-6 md:flex">
-          <div className="border border-tech-border bg-tech-surface p-6 shadow-hard-sm">
+          <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-6 shadow-hard-sm">
             <h4 className="mb-3 font-display text-[11px] font-black uppercase tracking-tight">{t("catSupportTitle")}</h4>
             <p className="text-[10px] leading-relaxed text-tech-muted">{t("catSupportBody")}</p>
             <Link href="/contact" className="mt-4 inline-block text-[10px] font-black uppercase text-primary underline underline-offset-4">
@@ -259,21 +262,23 @@ function CatalogContent({
           </p>
         </div>
 
-        <div className="mb-10 border border-tech-border bg-tech-surface p-4 shadow-hard-sm">
+        <div className="mb-10 rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("catSearchPlaceholder")}
-              className="h-11 w-full border border-tech-border px-4 font-mono text-xs uppercase focus:border-primary focus:ring-0 md:max-w-md"
+              className="h-11 w-full rounded-xl border-2 border-tech-border px-4 font-mono text-xs uppercase focus:border-primary focus:ring-0 md:max-w-md"
             />
             <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 md:flex-initial md:flex-nowrap">
-              <div className="flex shrink-0 border border-tech-border bg-tech-bg shadow-hard-sm">
+              <div className="flex shrink-0 rounded-xl border-2 border-tech-border bg-tech-bg shadow-hard-sm">
                 <button
                   onClick={() => setViewType("grid")}
                   className={cn(
                     "flex h-10 w-10 items-center justify-center",
-                    viewType === "grid" ? "bg-tech-text text-white dark:text-tech-brand" : "bg-tech-surface text-tech-text"
+                    viewType === "grid"
+                      ? "brutal-surface-invert bg-tech-text text-white dark:text-tech-brand"
+                      : "bg-tech-surface text-tech-text"
                   )}
                   aria-label={t("catAriaGrid")}
                 >
@@ -283,7 +288,9 @@ function CatalogContent({
                   onClick={() => setViewType("list")}
                   className={cn(
                     "flex h-10 w-10 items-center justify-center border-s border-tech-border",
-                    viewType === "list" ? "bg-tech-text text-white dark:text-tech-brand" : "bg-tech-surface text-tech-text"
+                    viewType === "list"
+                      ? "brutal-surface-invert bg-tech-text text-white dark:text-tech-brand"
+                      : "bg-tech-surface text-tech-text"
                   )}
                   aria-label={t("catAriaList")}
                 >
@@ -294,7 +301,7 @@ function CatalogContent({
                 type="button"
                 onClick={onClearCart}
                 disabled={cartItems.length === 0}
-                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 border border-tech-border bg-tech-surface px-3 font-styrene text-[11px] font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-[2px] hover:shadow-hard disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-hard-sm"
+                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border-2 border-tech-border bg-tech-surface px-3 font-styrene text-[11px] font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-[2px] hover:shadow-hard disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-hard-sm"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 {t("clearAll")}
@@ -302,7 +309,7 @@ function CatalogContent({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as "reference" | "name" | "precision")}
-                className="h-10 min-w-0 flex-1 border border-tech-border bg-tech-surface px-3 font-mono text-[11px] font-bold uppercase shadow-hard-sm focus:border-primary focus:ring-0 md:max-w-[280px] md:flex-initial"
+                className="h-10 min-w-0 flex-1 rounded-xl border-2 border-tech-border bg-tech-surface px-3 font-mono text-[11px] font-bold uppercase shadow-hard-sm focus:border-primary focus:ring-0 md:max-w-[280px] md:flex-initial"
               >
                 <option value="reference">{t("catSortRef")}</option>
                 <option value="name">{t("catSortName")}</option>
@@ -351,7 +358,7 @@ function CatalogContent({
         </AnimatePresence>
         
         {advancedFilteredProducts.length === 0 && (
-          <div className="flex h-64 flex-col items-center justify-center border border-tech-border border-dashed bg-tech-bg/30 text-tech-muted">
+          <div className="flex h-64 flex-col items-center justify-center rounded-xl border-2 border-tech-border border-dashed bg-tech-bg/30 text-tech-muted">
             <AlertCircle className="mb-2 h-10 w-10 opacity-20" />
             <p className="font-mono text-xs font-bold uppercase">{t("catEmpty")}</p>
           </div>
@@ -361,7 +368,7 @@ function CatalogContent({
           <div className="mt-10 flex max-w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto overscroll-x-contain pb-2 [-webkit-overflow-scrolling:touch] sm:flex-wrap sm:justify-center">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="h-10 border border-tech-border bg-tech-surface px-3 text-xs font-bold uppercase"
+              className="h-10 rounded-xl border-2 border-tech-border bg-tech-surface px-3 text-xs font-bold uppercase"
             >
               {t("catPrev")}
             </button>
@@ -372,8 +379,8 @@ function CatalogContent({
                   key={p}
                   onClick={() => setPage(p)}
                   className={cn(
-                    "h-10 w-10 border border-tech-border text-xs font-bold",
-                    currentPage === p ? "bg-primary text-white" : "bg-tech-surface"
+                    "h-10 w-10 rounded-xl border-2 border-tech-border text-xs font-bold",
+                    currentPage === p ? "bg-primary text-primary-foreground" : "bg-tech-surface"
                   )}
                 >
                   {p}
@@ -382,7 +389,7 @@ function CatalogContent({
             })}
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="h-10 border border-tech-border bg-tech-surface px-3 text-xs font-bold uppercase"
+              className="h-10 rounded-xl border-2 border-tech-border bg-tech-surface px-3 text-xs font-bold uppercase"
             >
               {t("catNext")}
             </button>
@@ -390,7 +397,7 @@ function CatalogContent({
         )}
 
         <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="border border-tech-border bg-tech-surface p-6 shadow-hard">
+          <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-6 shadow-hard">
             <h3 className="font-display text-2xl font-bold uppercase tracking-tight">{t("catWhyTitle")}</h3>
             <ul className="mt-4 space-y-2 text-sm font-medium text-tech-text/80">
               <li>{t("catWhy1")}</li>
@@ -398,12 +405,12 @@ function CatalogContent({
               <li>{t("catWhy3")}</li>
             </ul>
           </div>
-          <div className="blueprint-bg border border-tech-border bg-tech-bg/70 p-6 shadow-hard">
+          <div className="blueprint-bg rounded-xl border-2 border-tech-border bg-tech-bg/70 p-6 shadow-hard">
             <h3 className="font-display text-2xl font-bold uppercase tracking-tight">{t("catTailorTitle")}</h3>
             <p className="mt-3 text-sm font-medium text-tech-text/80">{t("catTailorBody")}</p>
             <Link
               href="/contact"
-              className="mt-4 inline-flex h-11 items-center justify-center border border-tech-border bg-primary px-5 font-styrene text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm"
+              className="mt-4 inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-5 font-styrene text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm"
             >
               {t("catTailorCta")}
             </Link>

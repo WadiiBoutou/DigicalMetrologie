@@ -30,7 +30,7 @@ function ProductDetailContent({
     <div className="mx-auto w-full max-w-7xl px-3 py-6 sm:px-4 sm:py-10 md:px-10">
       <div className="mb-12 flex flex-col gap-10 lg:flex-row">
         <div className="flex-1">
-          <div className="relative aspect-square overflow-hidden border border-tech-border bg-tech-surface shadow-hard">
+          <div className="relative aspect-square overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={product.image}
@@ -50,7 +50,7 @@ function ProductDetailContent({
           </h1>
           <p className="mb-8 font-sans text-tech-body/85 dark:text-tech-body/90">{description}</p>
           <div className="mt-auto flex flex-col gap-4 border-t border-tech-border pt-6 sm:flex-row">
-            <div className="flex h-12 w-full items-center overflow-hidden border border-tech-border bg-tech-surface shadow-hard-sm sm:w-32">
+            <div className="flex h-12 w-full items-center overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard-sm sm:w-32">
               <button
                 type="button"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -78,8 +78,8 @@ function ProductDetailContent({
               className={cn(
                 "flex h-12 flex-1 items-center justify-center gap-2 font-styrene font-bold uppercase shadow-hard-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-hard",
                 isInCart
-                  ? "border border-[#daa971] bg-[#254633] text-white"
-                  : "border border-transparent bg-[#b3262f] text-white",
+                  ? "rounded-xl border-2 border-tech-border bg-secondary text-secondary-foreground"
+                  : "rounded-xl border-2 border-transparent bg-primary text-primary-foreground",
               )}
             >
               {isInCart ? <Check className="h-5 w-5" /> : <ShoppingBag className="h-5 w-5" />}
@@ -91,7 +91,7 @@ function ProductDetailContent({
       <h2 className="mb-6 inline-block border-b-2 border-primary pb-2 font-display text-2xl font-bold uppercase">
         {t("prodSpecsTitle")}
       </h2>
-      <div className="overflow-x-auto border border-tech-border bg-tech-surface shadow-hard [-webkit-overflow-scrolling:touch]" dir="ltr">
+      <div className="overflow-x-auto rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard [-webkit-overflow-scrolling:touch]" dir="ltr">
         <table className="w-full min-w-[320px] border-collapse text-start">
           <tbody className="divide-y divide-tech-border/10">
             {Object.entries(product.specifications || {}).map(([k, v]) => (

@@ -3,59 +3,97 @@
 /* Class-based dark mode (Tailwind v4) */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Theme tokens — toggled via `html.dark` + ThemeToggle / localStorage */
+/* Precision Red & Steel — "Mewo-brutalist": rounded 12px + offset shadow on curve */
 :root {
-  --app-bg: #f8f0da;
-  --app-surface: #ffffff;
-  --app-surface-muted: #f8f0da;
-  --app-text: #254633;
+  --app-bg: #ffffff;
+  --app-surface: #f1f5f9;
+  --app-surface-muted: #f1f5f9;
+  --app-text: #0a0a0a;
   --app-body: #0a0a0a;
-  --app-border: #254633;
-  --app-muted: #daa971;
-  --app-footer-bg: #254633;
-  --app-shadow: #254633;
+  --app-border: #0a0a0a;
+  --app-muted: #64748b;
+  --app-footer-bg: #0a0a0a;
+  /* Mewo-brutalist offset silhouette — black on light surfaces */
+  --brutal-shadow: #000000;
+  --app-shadow: var(--brutal-shadow);
   --app-shadow-hard: 4px 4px 0px var(--app-shadow);
   --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
   --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
-  --app-blueprint-line: rgba(218, 169, 113, 0.22);
-  --app-blueprint-line-90: rgba(218, 169, 113, 0.2);
-  --app-body-grid: rgba(218, 169, 113, 0.2);
-  --tech-icon-bg: #f8f0da;
-  --tech-icon-shadow: #254633;
+  --app-blueprint-line: rgba(10, 10, 10, 0.1);
+  --app-blueprint-line-90: rgba(10, 10, 10, 0.1);
+  --app-body-grid: rgba(10, 10, 10, 0.1);
+  /* Logo red — sole high-contrast CTA */
+  --app-primary: #b3262f;
+  --app-on-primary: #ffffff;
+  --app-secondary: #64748b;
+  --app-on-secondary: #f8fafc;
+  --app-accent: #0a0a0a;
+  --app-brutalist-shadow: #0a0a0a;
+  --app-tech-brand: #475569;
+  --tech-icon-bg: #f1f5f9;
+  --tech-icon-border: #0a0a0a;
+  --tech-icon-shadow: #0a0a0a;
+  --tech-icon-tap: #334155;
+  --tech-icon-on-tap: #f8fafc;
+  --tech-icon-stroke: var(--app-primary);
+  --background: var(--app-bg);
+  --foreground: var(--app-body);
+  --card: var(--app-surface);
+  --primary: var(--app-primary);
+  --secondary: var(--app-secondary);
+  --accent: var(--app-accent);
+  --border: var(--app-border);
+  --color-bg: var(--app-bg);
+  --color-ink: var(--app-body);
 }
 
 .dark {
-  --app-bg: #121d18;
-  --app-surface: #254633;
-  --app-surface-muted: #1a2a22;
-  --app-text: #f8f0da;
-  --app-body: #f8f0da;
-  --app-border: #daa971;
-  --app-muted: #daa971;
-  --app-footer-bg: #0d1612;
-  --app-shadow: rgba(0, 0, 0, 0.72);
-  --app-shadow-hard: 5px 5px 0px rgba(0, 0, 0, 0.78);
-  --app-shadow-hard-sm: 3px 3px 0px rgba(0, 0, 0, 0.65);
-  --app-shadow-hard-hover: 7px 7px 0px rgba(0, 0, 0, 0.82);
-  /* Radar / oscilloscope grid */
-  --app-blueprint-line: rgba(37, 70, 51, 0.35);
-  --app-blueprint-line-90: rgba(179, 38, 47, 0.12);
-  --app-body-grid: rgba(37, 70, 51, 0.18);
-  --tech-icon-bg: #1e3228;
-  --tech-icon-shadow: rgba(0, 0, 0, 0.75);
+  --app-bg: #0a0a0a;
+  --app-surface: #141414;
+  --app-surface-muted: #171717;
+  --app-text: #ffffff;
+  --app-body: #f1f5f9;
+  --app-border: #404040;
+  --app-muted: #94a3b8;
+  --app-footer-bg: #0a0a0a;
+  /* Steel / soft white silhouette — visible on black & dark grey */
+  --brutal-shadow: #f1f5f9;
+  --app-shadow: var(--brutal-shadow);
+  --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+  --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+  --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  --app-blueprint-line: rgba(255, 255, 255, 0.2);
+  --app-blueprint-line-90: rgba(255, 255, 255, 0.2);
+  --app-body-grid: rgba(255, 255, 255, 0.2);
+  --app-primary: #b3262f;
+  --app-on-primary: #ffffff;
+  --app-secondary: #64748b;
+  --app-on-secondary: #f8fafc;
+  --app-accent: #ffffff;
+  --app-brutalist-shadow: rgba(255, 255, 255, 0.25);
+  --app-tech-brand: #94a3b8;
+  --tech-icon-bg: #1a1a1a;
+  --tech-icon-border: #525252;
+  --tech-icon-shadow: rgba(0, 0, 0, 0.85);
+  --tech-icon-tap: #404040;
+  --tech-icon-on-tap: #f8fafc;
+  --tech-icon-stroke: var(--app-primary);
+  --background: var(--app-bg);
+  --foreground: var(--app-body);
+  --card: var(--app-surface);
+  --primary: var(--app-primary);
+  --secondary: var(--app-secondary);
+  --accent: var(--app-accent);
+  --border: var(--app-border);
+  --color-bg: var(--app-bg);
+  --color-ink: var(--app-body);
 }
 
-/* Hard shadows: mirror on X for RTL (bottom-left instead of bottom-right) */
+/* Offset shadows mirrored for RTL (uses current --app-shadow, light or dark) */
 html[dir="rtl"] {
   --app-shadow-hard: -4px 4px 0px var(--app-shadow);
   --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
   --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
-}
-
-html.dark[dir="rtl"] {
-  --app-shadow-hard: -5px 5px 0px rgba(0, 0, 0, 0.78);
-  --app-shadow-hard-sm: -3px 3px 0px rgba(0, 0, 0, 0.65);
-  --app-shadow-hard-hover: -7px 7px 0px rgba(0, 0, 0, 0.82);
 }
 
 @theme {
@@ -64,7 +102,11 @@ html.dark[dir="rtl"] {
   --font-mono: var(--font-alexandria), ui-monospace, SFMono-Regular, monospace;
   --font-styrene: "Styrene A Medium", ui-sans-serif, system-ui, sans-serif;
 
-  --color-primary: #b3262f;
+  --color-primary: var(--app-primary);
+  --color-primary-foreground: var(--app-on-primary);
+  --color-secondary: var(--app-secondary);
+  --color-secondary-foreground: var(--app-on-secondary);
+  --color-accent: var(--app-accent);
   --color-tech-bg: var(--app-bg);
   --color-tech-surface: var(--app-surface);
   --color-tech-text: var(--app-text);
@@ -72,8 +114,7 @@ html.dark[dir="rtl"] {
   --color-tech-border: var(--app-border);
   --color-tech-muted: var(--app-muted);
   --color-tech-footer: var(--app-footer-bg);
-  /* Solid brand green (labels, legacy utilities) */
-  --color-tech-brand: #254633;
+  --color-tech-brand: var(--app-tech-brand);
 
   --shadow-hard: var(--app-shadow-hard);
   --shadow-hard-sm: var(--app-shadow-hard-sm);
@@ -114,6 +155,12 @@ html.dark[dir="rtl"] {
   h6 {
     @apply text-tech-text;
   }
+
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    border-radius: 0.75rem;
+  }
 }
 
 @layer utilities {
@@ -124,7 +171,130 @@ html.dark[dir="rtl"] {
     background-size: 20px 20px;
   }
 
-  /** Product & catalogue imagery — tone down glare on dark UI */
+  /**
+   * bg-tech-text panels: dark band in light mode → light silhouette;
+   * in .dark, same token is a light band → dark silhouette.
+   */
+  .brutal-surface-invert {
+    --brutal-shadow: #f1f5f9;
+    --app-shadow: var(--brutal-shadow);
+    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  }
+
+  html[dir="rtl"] .brutal-surface-invert {
+    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+  }
+
+  .dark .brutal-surface-invert {
+    --brutal-shadow: #0a0a0a;
+    --app-shadow: var(--brutal-shadow);
+    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  }
+
+  html[dir="rtl"] .dark .brutal-surface-invert {
+    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+  }
+
+  /** Black / near-black controls (FAB, industrial chip): always light silhouette */
+  .brutal-on-dark {
+    --brutal-shadow: #f1f5f9;
+    --app-shadow: var(--brutal-shadow);
+    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  }
+
+  html[dir="rtl"] .brutal-on-dark {
+    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+  }
+
+  /** Always black offset (WhatsApp FAB — no light/steel silhouette) */
+  .brutal-shadow-black {
+    --brutal-shadow: #000000;
+    --app-shadow: var(--brutal-shadow);
+    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  }
+
+  html[dir="rtl"] .brutal-shadow-black {
+    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+  }
+
+  /** White / light cards on global dark canvas */
+  .dark .brutal-on-light {
+    --brutal-shadow: #0a0a0a;
+    --app-shadow: var(--brutal-shadow);
+    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  }
+
+  html[dir="rtl"] .dark .brutal-on-light {
+    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
+    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
+    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+  }
+
+  /** Logo-red offset (Precision Lab CTAs on dark bands) */
+  .shadow-hard-primary,
+  .shadow-hard-sm-primary,
+  .shadow-hard-hover-primary {
+    border-radius: 0.75rem;
+  }
+
+  .shadow-hard-primary {
+    box-shadow: 4px 4px 0px 0px var(--app-primary);
+  }
+
+  .shadow-hard-sm-primary {
+    box-shadow: 2px 2px 0px 0px var(--app-primary);
+  }
+
+  .shadow-hard-hover-primary {
+    box-shadow: 6px 6px 0px 0px var(--app-primary);
+  }
+
+  html[dir="rtl"] .shadow-hard-primary {
+    box-shadow: -4px 4px 0px 0px var(--app-primary);
+  }
+
+  html[dir="rtl"] .shadow-hard-sm-primary {
+    box-shadow: -2px 2px 0px 0px var(--app-primary);
+  }
+
+  html[dir="rtl"] .shadow-hard-hover-primary {
+    box-shadow: -6px 6px 0px 0px var(--app-primary);
+  }
+
+  /** Mewo-brutalist: offset shadow follows rounded rect (12px) */
+  .shadow-hard,
+  .shadow-hard-sm,
+  .shadow-hard-hover {
+    border-radius: 0.75rem;
+  }
+
+  /** Blocky headline (e.g. "Precision"); LTR offset → RTL mirror */
+  .headline-brutalist {
+    text-shadow: 2px 2px 0 var(--app-brutalist-shadow);
+  }
+
+  html[dir="rtl"] .headline-brutalist {
+    text-shadow: -2px 2px 0 var(--app-brutalist-shadow);
+  }
+
   .product-image {
     @apply dark:brightness-[0.85] dark:contrast-110;
   }

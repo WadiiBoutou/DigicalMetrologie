@@ -65,7 +65,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="relative flex h-10 w-10 items-center justify-center overflow-hidden border border-tech-border bg-tech-surface text-tech-text shadow-hard-sm transition-all hover:-translate-y-[2px] hover:shadow-hard"
+      className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface text-tech-text shadow-hard-sm transition-all hover:-translate-y-[2px] hover:shadow-hard"
       aria-label={t("themeToggle")}
       title={t("themeToggle")}
     >

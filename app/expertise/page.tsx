@@ -50,7 +50,7 @@ function ExpertiseContent() {
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            className="border border-tech-border bg-tech-surface p-8 shadow-hard"
+            className="rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard"
           >
             <item.icon className="mb-6 h-10 w-10 text-primary" />
             <h3 className="mb-3 font-display text-xl font-bold uppercase tracking-tight">{item.title}</h3>
@@ -60,11 +60,11 @@ function ExpertiseContent() {
       </section>
 
       <section className="mb-20 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className="border border-tech-border bg-tech-surface p-8 shadow-hard">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard">
           <h2 className="font-display text-3xl font-black uppercase tracking-tight">{t("expDomainsTitle")}</h2>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {domains.map((d) => (
-              <div key={d} className="border border-tech-border bg-tech-bg px-4 py-3 font-mono text-[11px] font-bold uppercase text-tech-text">
+              <div key={d} className="rounded-xl border-2 border-tech-border bg-tech-bg px-4 py-3 font-mono text-[11px] font-bold uppercase text-tech-text">
                 {d}
               </div>
             ))}
@@ -74,7 +74,7 @@ function ExpertiseContent() {
           </p>
         </div>
 
-        <div className="relative overflow-hidden border border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
+        <div className="brutal-surface-invert relative overflow-hidden rounded-xl border-2 border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
           <div className="blueprint-bg absolute inset-0 opacity-20" />
           <div className="relative">
             <h2 className="font-display text-3xl font-black uppercase tracking-tight text-white dark:text-tech-brand">
@@ -84,7 +84,7 @@ function ExpertiseContent() {
               {livrables.map((item) => (
                 <div
                   key={item}
-                  className="border border-white/20 bg-tech-surface/5 px-4 py-3 text-sm font-semibold uppercase text-white dark:text-tech-brand"
+                  className="rounded-lg border-2 border-white/20 bg-tech-surface/5 px-4 py-3 text-sm font-semibold uppercase text-white dark:text-tech-brand"
                 >
                   {item}
                 </div>
@@ -100,7 +100,7 @@ function ExpertiseContent() {
       </section>
 
       <section className="mb-20 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className="border border-tech-border bg-tech-surface p-8 shadow-hard">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard">
           <h3 className="font-display text-2xl font-black uppercase tracking-tight">{t("expMethodTitle")}</h3>
           <p className="mt-3 text-sm font-medium text-tech-text/75">
             {t("expMethodLead")}
@@ -113,14 +113,14 @@ function ExpertiseContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ delay: idx * 0.05 }}
-                className="border border-tech-border bg-tech-bg px-4 py-3 font-mono text-[11px] font-bold uppercase text-tech-text"
+                className="rounded-xl border-2 border-tech-border bg-tech-bg px-4 py-3 font-mono text-[11px] font-bold uppercase text-tech-text"
               >
                 {line}
               </motion.div>
             ))}
           </div>
         </div>
-        <div className="relative overflow-hidden border border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
+        <div className="brutal-surface-invert relative overflow-hidden rounded-xl border-2 border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
           <div className="blueprint-bg absolute inset-0 opacity-20" />
           <div className="relative">
             <h3 className="font-display text-2xl font-black uppercase tracking-tight text-white dark:text-tech-brand">
@@ -130,7 +130,7 @@ function ExpertiseContent() {
               {sectors.map((sector) => (
                 <div
                   key={sector}
-                  className="border border-white/20 bg-tech-surface/5 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white dark:text-tech-brand"
+                  className="rounded-lg border-2 border-white/20 bg-tech-surface/5 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white dark:text-tech-brand"
                 >
                   {sector}
                 </div>
@@ -143,7 +143,7 @@ function ExpertiseContent() {
         </div>
       </section>
 
-      <section className="mb-20 border border-tech-border bg-tech-surface p-8 shadow-hard md:p-10">
+      <section className="mb-20 rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard md:p-10">
         <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="font-mono text-xs font-bold uppercase text-primary">{t("expProofKicker")}</span>
@@ -157,7 +157,7 @@ function ExpertiseContent() {
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {kpi.map((row) => (
-            <div key={row.label} className="border border-tech-border bg-tech-bg p-5 shadow-hard-sm">
+            <div key={row.label} className="rounded-xl border-2 border-tech-border bg-tech-bg p-5 shadow-hard-sm">
               <p className="font-display text-3xl font-black text-primary">{row.value}</p>
               <p className="mt-1 font-mono text-[11px] font-bold uppercase text-tech-text">{row.label}</p>
             </div>
@@ -166,34 +166,34 @@ function ExpertiseContent() {
       </section>
 
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className="border border-tech-border bg-tech-bg p-8 shadow-hard-sm">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-bg p-8 shadow-hard-sm">
           <h3 className="font-display text-2xl font-black uppercase tracking-tight">{t("expFaqTitle")}</h3>
           <div className="mt-5 space-y-4">
             {faq.map((f) => (
-              <div key={f.q} className="border border-tech-border bg-tech-surface p-4">
+              <div key={f.q} className="rounded-xl border-2 border-tech-border bg-tech-surface p-4">
                 <p className="font-display text-lg font-bold uppercase tracking-tight">{f.q}</p>
                 <p className="mt-1 text-sm font-medium text-tech-text/75">{f.a}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="border border-tech-border bg-tech-surface p-8 shadow-hard">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard">
           <h3 className="font-display text-2xl font-black uppercase tracking-tight">{t("expActionTitle")}</h3>
           <p className="mt-3 text-sm font-medium text-tech-text/80">
             {t("expActionLead")}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/contact" className="inline-flex h-11 items-center justify-center border border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm">
+            <Link href="/contact" className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm-primary transition-all hover:-translate-y-0.5 hover:shadow-hard-hover-primary">
               {t("expCtaScope")}
             </Link>
-            <Link href="/catalogue" className="inline-flex h-11 items-center justify-center border border-tech-border bg-tech-bg px-6 font-styrene text-xs font-bold uppercase tracking-wider text-tech-text shadow-hard-sm">
+            <Link href="/catalogue" className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-tech-bg px-6 font-styrene text-xs font-bold uppercase tracking-wider text-tech-text shadow-hard-sm">
               {t("expCtaCatalog")}
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="mt-20 border border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand md:p-10 [&_h3]:text-white [&_h3]:dark:text-tech-brand">
+      <section className="mt-20 rounded-xl border-2 border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand md:p-10 [&_h3]:text-white [&_h3]:dark:text-tech-brand">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[1.4fr_1fr] md:items-center">
           <div>
             <h3 className="font-display text-3xl font-black uppercase tracking-tight text-white dark:text-tech-brand md:text-4xl">
@@ -204,12 +204,12 @@ function ExpertiseContent() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">
-            <Link href="/contact" className="inline-flex h-11 items-center justify-center border border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm">
+            <Link href="/contact" className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm-primary transition-all hover:-translate-y-0.5 hover:shadow-hard-hover-primary">
               {t("expBannerCall")}
             </Link>
             <Link
               href="/services"
-              className="inline-flex h-11 items-center justify-center border border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
+              className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
             >
               {t("expBannerServices")}
             </Link>

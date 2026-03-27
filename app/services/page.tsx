@@ -62,7 +62,7 @@ function ServicesContent() {
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
         {/* Left: Repair Workflow */}
         <div
-          className="flex flex-col border border-tech-border bg-tech-surface p-8 shadow-hard"
+          className="flex flex-col rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard"
           onMouseEnter={() => setIsRepairHovered(true)}
           onMouseLeave={() => setIsRepairHovered(false)}
         >
@@ -85,7 +85,7 @@ function ServicesContent() {
                 <div
                   className={cn(
                     "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center border-2 border-tech-border bg-tech-surface font-mono text-sm font-black transition-all",
-                    step > s.id && "border-primary bg-primary text-white",
+                    step > s.id && "border-primary bg-primary text-primary-foreground",
                     step === s.id && "border-primary text-primary shadow-hard-sm",
                     step < s.id && "text-tech-muted"
                   )}
@@ -102,7 +102,7 @@ function ServicesContent() {
         </div>
 
         {/* Right: Calibration Lab */}
-        <div className="flex flex-col border border-tech-border bg-tech-surface p-8 shadow-hard">
+        <div className="flex flex-col rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard">
           <div className="mb-6 flex items-center gap-3 border-b border-tech-border pb-4">
             <Scale className="h-8 w-8 text-primary" />
             <h2 className="font-display text-2xl font-bold uppercase">{t("srvLabTitle")}</h2>
@@ -116,7 +116,7 @@ function ServicesContent() {
               { title: t("srvLabK3"), val: t("srvLabV3") },
               { title: t("srvLabK4"), val: t("srvLabV4") },
             ].map((item) => (
-              <div key={item.title} className="border border-tech-border bg-tech-bg p-4 shadow-hard-sm">
+              <div key={item.title} className="rounded-xl border-2 border-tech-border bg-tech-bg p-4 shadow-hard-sm">
                 <span className="mb-1 block font-mono text-[10px] uppercase text-tech-muted">{item.title}</span>
                 <span className="block font-display text-xs font-bold uppercase text-primary">{item.val}</span>
               </div>
@@ -124,14 +124,14 @@ function ServicesContent() {
           </div>
           
           <div className="mt-10 flex flex-1 items-end">
-            <div className="blueprint-bg relative flex h-32 w-full items-center justify-center border border-tech-border p-6 text-center opacity-80">
+            <div className="blueprint-bg relative flex h-32 w-full items-center justify-center rounded-xl border-2 border-tech-border p-6 text-center opacity-80">
               <span className="relative z-10 font-display text-sm font-black uppercase tracking-widest text-tech-text/40">{t("srvLabBadge")}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <section className="mt-20 border border-tech-border bg-tech-surface p-8 shadow-hard md:p-10">
+      <section className="mt-20 rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard md:p-10">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="font-mono text-xs font-bold uppercase text-primary">{t("srvModulesKicker")}</span>
@@ -163,7 +163,7 @@ function ServicesContent() {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              className="border border-tech-border bg-tech-bg p-5 shadow-hard-sm"
+              className="rounded-xl border-2 border-tech-border bg-tech-bg p-5 shadow-hard-sm"
             >
               <h3 className="font-display text-2xl font-black uppercase tracking-tight text-primary">{pack.title}</h3>
               <ul className="mt-4 space-y-2">
@@ -179,7 +179,7 @@ function ServicesContent() {
       </section>
 
       <section className="mt-20 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className="relative overflow-hidden border border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
+        <div className="brutal-surface-invert relative overflow-hidden rounded-xl border-2 border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
           <div className="blueprint-bg absolute inset-0 opacity-20" />
           <div className="relative">
             <h2 className="font-display text-3xl font-black uppercase tracking-tight text-white dark:text-tech-brand md:text-4xl">
@@ -195,7 +195,7 @@ function ServicesContent() {
               ].map((line, idx) => (
                 <div
                   key={line}
-                  className="border border-white/20 bg-tech-surface/5 px-4 py-3 text-sm font-semibold uppercase text-white dark:text-tech-brand"
+                  className="rounded-lg border-2 border-white/20 bg-tech-surface/5 px-4 py-3 text-sm font-semibold uppercase text-white dark:text-tech-brand"
                 >
                   {idx + 1}. {line}
                 </div>
@@ -203,7 +203,7 @@ function ServicesContent() {
             </div>
           </div>
         </div>
-        <div className="border border-tech-border bg-tech-surface p-8 shadow-hard">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard">
           <h2 className="font-display text-3xl font-black uppercase tracking-tight md:text-4xl">
             {t("srvEnvTitle")}
           </h2>
@@ -221,7 +221,7 @@ function ServicesContent() {
               t("srvEnv7"),
               t("srvEnv8"),
             ].map((sector) => (
-              <div key={sector} className="border border-tech-border bg-tech-bg px-3 py-2 font-mono text-[10px] font-bold uppercase text-tech-text">
+              <div key={sector} className="rounded-xl border-2 border-tech-border bg-tech-bg px-3 py-2 font-mono text-[10px] font-bold uppercase text-tech-text">
                 {sector}
               </div>
             ))}
@@ -229,7 +229,7 @@ function ServicesContent() {
         </div>
       </section>
 
-      <section className="mt-20 border border-tech-border bg-tech-surface p-8 shadow-hard md:p-10">
+      <section className="mt-20 rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard md:p-10">
         <h2 className="font-display text-3xl font-black uppercase tracking-tight md:text-4xl">
           {t("srvBeforeTitle")}
         </h2>
@@ -238,7 +238,7 @@ function ServicesContent() {
             {
               title: t("srvColBefore"),
               lines: [t("srvBeforeL1"), t("srvBeforeL2"), t("srvBeforeL3")],
-              tone: "bg-red-50",
+              tone: "bg-tech-surface",
             },
             {
               title: t("srvColTransition"),
@@ -250,15 +250,15 @@ function ServicesContent() {
             {
               title: t("srvColAfter"),
               lines: [t("srvAfterL1"), t("srvAfterL2"), t("srvAfterL3")],
-              tone: "bg-emerald-50",
+              tone: "bg-tech-surface/90",
             },
           ].map((col) => (
-            <div key={col.title} className={`border border-tech-border p-5 shadow-hard-sm ${col.tone}`}>
+            <div key={col.title} className={`rounded-xl border-2 border-tech-border p-5 shadow-hard-sm ${col.tone}`}>
               <h3
                 className={cn(
                   "font-display text-2xl font-black uppercase tracking-tight text-tech-text",
                   "lightTextInDark" in col && col.lightTextInDark
-                    ? "dark:text-[#f8f0da]"
+                    ? "dark:text-tech-body"
                     : "dark:text-tech-brand",
                 )}
               >
@@ -271,7 +271,7 @@ function ServicesContent() {
                     className={cn(
                       "font-mono text-[11px] font-bold uppercase text-tech-text",
                       "lightTextInDark" in col && col.lightTextInDark
-                        ? "dark:text-[#f8f0da]/85"
+                        ? "dark:text-tech-body/85"
                         : "dark:text-tech-brand",
                     )}
                   >
@@ -285,7 +285,7 @@ function ServicesContent() {
       </section>
 
       <section className="mt-20 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className="border border-tech-border bg-tech-bg p-8 shadow-hard-sm">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-bg p-8 shadow-hard-sm">
           <h3 className="font-display text-2xl font-black uppercase tracking-tight">{t("srvTestimonialsTitle")}</h3>
           <div className="mt-5 space-y-4">
             {[t("srvTesti1"), t("srvTesti2"), t("srvTesti3")].map((quote) => (
@@ -294,7 +294,7 @@ function ServicesContent() {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                className="border border-tech-border bg-tech-surface p-4"
+                className="rounded-xl border-2 border-tech-border bg-tech-surface p-4"
               >
                 <p className="text-sm font-medium text-tech-text/80">&ldquo;{quote}&rdquo;</p>
               </motion.blockquote>
@@ -302,7 +302,7 @@ function ServicesContent() {
           </div>
         </div>
 
-        <div className="border border-tech-border bg-tech-surface p-8 shadow-hard">
+        <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-8 shadow-hard">
           <h3 className="font-display text-2xl font-black uppercase tracking-tight">{t("srvFaqTitle")}</h3>
           <div className="mt-5 space-y-4">
             {[
@@ -310,7 +310,7 @@ function ServicesContent() {
               { q: t("srvFaq2Q"), a: t("srvFaq2A") },
               { q: t("srvFaq3Q"), a: t("srvFaq3A") },
             ].map((faq) => (
-              <div key={faq.q} className="border border-tech-border bg-tech-bg p-4">
+              <div key={faq.q} className="rounded-xl border-2 border-tech-border bg-tech-bg p-4">
                 <p className="font-display text-lg font-bold uppercase tracking-tight">{faq.q}</p>
                 <p className="mt-1 text-sm font-medium text-tech-text/75">{faq.a}</p>
               </div>
@@ -319,7 +319,7 @@ function ServicesContent() {
         </div>
       </section>
 
-      <section className="mt-20 border border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand md:p-10 [&_h3]:text-white [&_h3]:dark:text-tech-brand">
+      <section className="brutal-surface-invert mt-20 rounded-xl border-2 border-tech-muted bg-tech-text p-8 text-white shadow-hard dark:text-tech-brand md:p-10 [&_h3]:text-white [&_h3]:dark:text-tech-brand">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[1.4fr_1fr] md:items-center">
           <div>
             <h3 className="font-display text-3xl font-black uppercase tracking-tight text-white dark:text-tech-brand md:text-4xl">
@@ -330,12 +330,12 @@ function ServicesContent() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">
-            <Link href="/contact" className="inline-flex h-11 items-center justify-center border border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm">
+            <Link href="/contact" className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm-primary transition-all hover:-translate-y-0.5 hover:shadow-hard-hover-primary">
               {t("srvBannerStart")}
             </Link>
             <Link
               href="/expertise"
-              className="inline-flex h-11 items-center justify-center border border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
+              className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
             >
               {t("srvBannerExpertise")}
             </Link>

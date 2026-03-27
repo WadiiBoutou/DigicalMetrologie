@@ -108,7 +108,10 @@ export const digicalTranslations = {
   prodRemoveQuote: { FR: "Retirer du devis", AR: "إزالة من العرض" },
 
   homeHeroLine1: { FR: "Technologie", AR: "تقنية" },
-  homeHeroLine2: { FR: "de Precision", AR: "الدقة" },
+  /** Plain segment before the emphasized word (no lift / no accent color) */
+  homeHeroLine2Prefix: { FR: "de ", AR: "" },
+  /** Emphasized segment: primary + brutalist shadow */
+  homeHeroLine2Emphasis: { FR: "Precision", AR: "الدقة" },
   homeHeroLead: {
     FR: "Expertise en metrologie pour les secteurs industriel et agricole. Solutions de mesure, reparation et etalonnage certifie.",
     AR: "خبرة في المترولوجيا للقطاعين الصناعي والفلاحي. قياس وإصلاح ومعايرة معتمدة.",

@@ -1,62 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState, type ComponentType } from "react";
 import { motion } from "motion/react";
-import Lottie, { type LottieRefCurrentProps } from "lottie-react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BadgeCheck, ShoppingCart, Wrench } from "lucide-react";
 import { AppShell } from "@/components/digical/AppShell";
 import { useDigicalI18n } from "@/components/digical/language";
 import { useDigicalCart } from "@/components/digical/useDigicalCart";
-import cartAnimation from "@/public/icons/Cart.json";
-import maintenanceAnimation from "@/public/icons/Maintenance.json";
-import accreditationAnimation from "@/public/icons/Accreditation.json";
 import { cn } from "@/lib/utils";
 
-function PillarLottieIcon({
-  animationData,
+type PillarLucide = ComponentType<{ className?: string; strokeWidth?: number }>;
+
+function PillarIcon({
+  icon: Icon,
   isActive,
 }: {
-  animationData: object;
+  icon: PillarLucide;
   isActive: boolean;
 }) {
-  const lottieRef = useRef<LottieRefCurrentProps>(null);
-
-  useEffect(() => {
-    const lottie = lottieRef.current;
-    if (!lottie) return;
-
-    if (isActive) {
-      lottie.play();
-      return;
-    }
-
-    lottie.stop();
-  }, [isActive]);
-
   return (
     <motion.div
       className={cn(
         "relative mb-6 flex h-16 w-16 items-center justify-center",
-        "border-2 border-[#daa971] bg-[#f8f0da] shadow-[4px_4px_0px_0px_#254633]",
-        "group-hover:shadow-[6px_6px_0px_0px_#254633]",
-        isActive && "shadow-[6px_6px_0px_0px_#254633]",
+        "rounded-xl border-2 border-tech-border bg-tech-bg shadow-hard",
+        "group-hover:shadow-hard-hover",
+        isActive && "shadow-hard-hover",
       )}
       animate={isActive ? { x: -2, y: -2 } : { x: 0, y: 0 }}
       whileHover={{ x: -2, y: -2 }}
       transition={{ type: "spring", stiffness: 420, damping: 24 }}
     >
-      <span className="pointer-events-none absolute left-0 top-0 h-2 w-2 border-l-2 border-t-2 border-[#daa971]" />
-      <span className="pointer-events-none absolute right-0 top-0 h-2 w-2 border-r-2 border-t-2 border-[#daa971]" />
-      <span className="pointer-events-none absolute bottom-0 left-0 h-2 w-2 border-b-2 border-l-2 border-[#daa971]" />
-      <span className="pointer-events-none absolute bottom-0 right-0 h-2 w-2 border-b-2 border-r-2 border-[#daa971]" />
-      <Lottie
-        lottieRef={lottieRef}
-        animationData={animationData}
-        autoplay={false}
-        loop
-        className="h-10 w-10"
-      />
+      <span className="pointer-events-none absolute left-0 top-0 h-2 w-2 border-l-2 border-t-2 border-tech-border" />
+      <span className="pointer-events-none absolute right-0 top-0 h-2 w-2 border-r-2 border-t-2 border-tech-border" />
+      <span className="pointer-events-none absolute bottom-0 left-0 h-2 w-2 border-b-2 border-l-2 border-tech-border" />
+      <span className="pointer-events-none absolute bottom-0 right-0 h-2 w-2 border-b-2 border-r-2 border-tech-border" />
+      <Icon className="h-10 w-10 text-primary" strokeWidth={1.75} aria-hidden />
     </motion.div>
   );
 }
@@ -69,19 +47,19 @@ function HomeContent() {
     {
       id: "vente",
       title: t("homePillarVenteTitle"),
-      animationData: cartAnimation,
+      icon: ShoppingCart,
       desc: t("homePillarVenteDesc"),
     },
     {
       id: "reparation",
       title: t("homePillarRepTitle"),
-      animationData: maintenanceAnimation,
+      icon: Wrench,
       desc: t("homePillarRepDesc"),
     },
     {
       id: "etalonnage",
       title: t("homePillarEtalTitle"),
-      animationData: accreditationAnimation,
+      icon: BadgeCheck,
       desc: t("homePillarEtalDesc"),
     },
   ] as const;
@@ -138,29 +116,30 @@ function HomeContent() {
       <section className="relative overflow-hidden bg-tech-bg px-4 py-20 md:px-10 md:py-32">
         <div className="blueprint-bg absolute inset-0 opacity-40" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="flex flex-col items-center gap-12 text-center md:items-start md:text-left lg:flex-row lg:items-center">
+          <div className="flex flex-col items-center gap-12 text-center md:items-start md:text-start lg:flex-row lg:items-center">
             <div className="flex-1">
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
                 <h1 className="mb-6 font-display text-4xl font-[900] uppercase leading-[1] tracking-tighter sm:text-5xl md:text-7xl lg:text-8xl">
                   {t("homeHeroLine1")} <br />
-                  <span className="text-primary">{t("homeHeroLine2")}</span>
+                  <span className="text-tech-text">{t("homeHeroLine2Prefix")}</span>
+                  <span className="text-primary headline-brutalist">{t("homeHeroLine2Emphasis")}</span>
                 </h1>
                 <p className="mb-10 max-w-xl border-s-4 border-primary ps-6 font-sans text-lg font-medium text-tech-text/80 md:text-xl">
                   {t("homeHeroLead")}
                 </p>
                 <div className="flex w-full max-w-xl flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-4">
-                  <Link href="/catalogue" className="flex h-14 w-full items-center justify-center border border-tech-border bg-primary px-8 font-styrene text-sm font-bold uppercase tracking-wider text-white shadow-hard transition-all hover:-translate-y-1 hover:shadow-hard-hover sm:w-auto sm:px-10">
+                  <Link href="/catalogue" className="flex h-14 w-full items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-8 font-styrene text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-hard transition-all hover:-translate-y-1 hover:shadow-hard-hover sm:w-auto sm:px-10">
                     {t("homeCtaCatalog")}
                     <ArrowRight className="ms-2 h-5 w-5 shrink-0" />
                   </Link>
-                  <Link href="/contact" className="flex h-14 w-full items-center justify-center border border-tech-border bg-tech-surface px-8 font-styrene text-sm font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-1 hover:shadow-hard sm:w-auto sm:px-10">
+                  <Link href="/contact" className="flex h-14 w-full items-center justify-center rounded-xl border-2 border-tech-border bg-tech-surface px-8 font-styrene text-sm font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-1 hover:shadow-hard sm:w-auto sm:px-10">
                     {t("homeCtaQuote")}
                   </Link>
                 </div>
               </motion.div>
             </div>
             <div className="relative w-full flex-1">
-              <div className="relative mx-auto aspect-square max-w-lg overflow-hidden border border-tech-border shadow-hard lg:mx-0 lg:max-w-none">
+              <div className="relative mx-auto aspect-square max-w-lg overflow-hidden rounded-xl border-2 border-tech-border shadow-hard lg:mx-0 lg:max-w-none">
                 <img
                   src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=1400&h=1400&fm=jpg&fit=crop&q=80"
                   alt={t("homeHeroImgAlt")}
@@ -176,7 +155,7 @@ function HomeContent() {
       </section>
 
       {/* The Three Pillars — in .dark, bg-tech-text is light; use dark text for contrast (background unchanged). */}
-      <section className="bg-tech-text py-24 text-white dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
+      <section className="brutal-surface-invert bg-tech-text py-24 text-white dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
         <div className="mx-auto max-w-7xl px-4 md:px-10">
           <div className="mb-16 text-center md:text-left">
             <h2 className="mb-4 font-display text-3xl font-black uppercase tracking-tight text-white dark:text-tech-brand md:text-4xl">
@@ -190,9 +169,9 @@ function HomeContent() {
                 key={p.id}
                 onMouseEnter={() => setPillarHover(p.id)}
                 onMouseLeave={() => setPillarHover(null)}
-                className="group border border-white/10 bg-tech-surface/5 p-8 transition-colors hover:bg-tech-surface/10"
+                className="group rounded-xl border-2 border-white/10 bg-tech-surface/5 p-8 transition-colors hover:bg-tech-surface/10"
               >
-                <PillarLottieIcon animationData={p.animationData} isActive={pillarHover === p.id} />
+                <PillarIcon icon={p.icon} isActive={pillarHover === p.id} />
                 <h3 className="mb-3 font-display text-2xl font-bold uppercase tracking-tight text-white dark:text-tech-brand">
                   {p.title}
                 </h3>
@@ -227,7 +206,7 @@ function HomeContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.35, delay: idx * 0.08 }}
-                className="border border-tech-border bg-tech-bg/70 p-6 shadow-hard"
+                className="rounded-xl border-2 border-tech-border bg-tech-bg/70 p-6 shadow-hard"
               >
                 <div className="font-display text-4xl font-black text-primary">{kpi.value}</div>
                 <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-wide text-tech-text">
@@ -257,9 +236,9 @@ function HomeContent() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.3, delay: idx * 0.08 }}
-                  className="flex items-start gap-4 border border-tech-border bg-tech-surface p-4 shadow-hard-sm"
+                  className="flex items-start gap-4 rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm"
                 >
-                  <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center border border-tech-border bg-primary font-mono text-[10px] font-black text-white">
+                  <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 border-tech-border bg-primary font-mono text-[10px] font-black text-primary-foreground">
                     {idx + 1}
                   </span>
                   <p className="text-sm font-semibold uppercase tracking-wide text-tech-text">{step}</p>
@@ -271,7 +250,7 @@ function HomeContent() {
       </section>
 
       {/* Showcase Gallery */}
-      <section className="bg-tech-text py-24 text-white dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
+      <section className="brutal-surface-invert bg-tech-text py-24 text-white dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
         <div className="mx-auto max-w-7xl px-4 md:px-10">
           <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -294,7 +273,7 @@ function HomeContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.35, delay: idx * 0.1 }}
-                className="group relative overflow-hidden border border-white/15 bg-black/20 shadow-hard"
+                className="group relative overflow-hidden rounded-xl border-2 border-white/15 bg-black/20 shadow-hard"
               >
                 <img
                   src={item.src}
@@ -332,7 +311,7 @@ function HomeContent() {
                     initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.35 }}
-                    className="border border-tech-border bg-tech-bg p-5 shadow-hard-sm"
+                    className="rounded-xl border-2 border-tech-border bg-tech-bg p-5 shadow-hard-sm"
                   >
                     <p className="text-sm font-medium text-tech-text/80">&ldquo;{quote}&rdquo;</p>
                   </motion.blockquote>
@@ -341,12 +320,12 @@ function HomeContent() {
             </div>
             <div className="flex flex-col gap-5">
               {faqs.map((faq) => (
-                <div key={faq.q} className="border border-tech-border bg-tech-surface p-5 shadow-hard-sm">
+                <div key={faq.q} className="rounded-xl border-2 border-tech-border bg-tech-surface p-5 shadow-hard-sm">
                   <p className="font-display text-lg font-bold uppercase tracking-tight">{faq.q}</p>
                   <p className="mt-2 text-sm font-medium text-tech-text/75">{faq.a}</p>
                 </div>
               ))}
-              <div className="mt-2 border border-tech-muted bg-tech-text p-6 text-white shadow-hard dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
+              <div className="brutal-surface-invert mt-2 rounded-xl border-2 border-tech-muted bg-tech-text p-6 text-white shadow-hard dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-tech-muted dark:text-tech-brand/70">
                   {t("homeCtaBoxKicker")}
                 </p>
@@ -359,13 +338,13 @@ function HomeContent() {
                 <div className="mt-4 flex flex-wrap gap-3">
                   <Link
                     href="/contact"
-                    className="inline-flex h-11 items-center justify-center border border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm"
+                    className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm-primary transition-all hover:-translate-y-0.5 hover:shadow-hard-hover-primary"
                   >
                     {t("homeCtaBoxPrimary")}
                   </Link>
                   <Link
                     href="/catalogue"
-                    className="inline-flex h-11 items-center justify-center border border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
+                    className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
                   >
                     {t("homeCtaBoxSecondary")}
                   </Link>
