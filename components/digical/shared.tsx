@@ -84,11 +84,8 @@ export function Navbar({ cartCount, route }: { cartCount: number; route: Digical
       if (e.key === "Escape") setMobileOpen(false);
     };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
     };
   }, [mobileOpen]);
 
@@ -432,16 +429,16 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 md:grid-cols-4 md:px-10">
         <div className="flex flex-col gap-4">
           <div className="flex flex-nowrap items-center gap-3">
-            <div className="relative h-10 w-32 shrink-0 rounded-sm p-2.5">
+            <div className="relative h-10 w-10 shrink-0">
               <Image
-                src="/LOGO.png"
+                src="/LOGO.webp"
                 alt="Digical Metrologie"
                 fill
-                sizes="128px"
+                sizes="40px"
                 className="object-contain transition-all duration-300"
               />
             </div>
-            <span className="min-w-0 font-display text-xl font-black uppercase tracking-tight">
+            <span className="min-w-0 font-display text-xl leading-none font-black uppercase tracking-tight">
               Digical Metrologie
             </span>
           </div>
@@ -507,7 +504,7 @@ export function WhatsAppFloatButton() {
       >
         <path d="M19.05 4.91A9.82 9.82 0 0 0 12.03 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.74.45 3.44 1.3 4.95L2 22l5.3-1.39a9.88 9.88 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.12-2.89-7zM12.04 20.1h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.15.83.84-3.07-.2-.31a8.15 8.15 0 0 1-1.26-4.33c0-4.52 3.68-8.2 8.21-8.2 2.19 0 4.24.85 5.79 2.4a8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.2-8.2 8.2zm4.5-6.15c-.25-.13-1.47-.73-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.98-.14.17-.29.19-.54.06-.25-.13-1.04-.38-1.98-1.22-.73-.65-1.22-1.46-1.37-1.71-.14-.25-.02-.39.11-.52.12-.12.25-.3.37-.45.12-.14.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.76-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.23.9 2.43 1.03 2.6.13.17 1.76 2.69 4.26 3.77.59.26 1.05.41 1.41.53.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.17.21-.58.21-1.07.15-1.17-.06-.1-.22-.16-.47-.29z" />
       </svg>
-          WhatsApp
+      WhatsApp
     </a>
   );
 }

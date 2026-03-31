@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: APP_NAME,
   title: {
-    default: APP_NAME,
+    default: `${APP_NAME} | Expert en Métrologie de Précision`,
     template: `%s | ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: [{ url: "/LOGO.png", type: "image/png" }],
-    apple: "/LOGO.png",
+    icon: [{ url: "/LOGO.webp", type: "image/png" }],
+    apple: "/LOGO.webp",
   },
   openGraph: {
     type: "website",
@@ -77,11 +77,11 @@ export const metadata: Metadata = {
     alternateLocale: ["ar_MA"],
     url: SITE_URL,
     siteName: APP_NAME,
-    title: APP_NAME,
+    title: `${APP_NAME} | Expert en Métrologie de Précision`,
     description: APP_DESCRIPTION,
     images: [
       {
-        url: "/LOGO.png",
+        url: "/LOGO.webp",
         width: 800,
         height: 400,
         alt: APP_NAME,
@@ -90,9 +90,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: APP_NAME,
+    title: `${APP_NAME} | Expert en Métrologie de Précision`,
     description: APP_DESCRIPTION,
-    images: ["/LOGO.png"],
+    images: ["/LOGO.webp"],
   },
   robots: {
     index: true,
@@ -124,8 +124,8 @@ const jsonLd = {
   description: APP_DESCRIPTION,
   url: SITE_URL,
   telephone: "+212661406490",
-  logo: `${SITE_URL}/LOGO.png`,
-  image: `${SITE_URL}/LOGO.png`,
+  logo: `${SITE_URL}/LOGO.webp`,
+  image: `${SITE_URL}/LOGO.webp`,
   address: {
     "@type": "PostalAddress",
     addressCountry: "MA",

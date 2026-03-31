@@ -115,70 +115,40 @@ export function PrecisionTimeline() {
     >
       <div className="blueprint-bg pointer-events-none absolute inset-0 opacity-[0.14]" />
 
-      <div className="relative md:hidden">
-        <div className="mb-6 grid grid-cols-5 gap-2">
-          {steps.map((step) => (
-            <div
-              key={`mobile-${step.id}`}
-              className="rounded-xl border-2 border-tech-border bg-tech-surface px-2 py-2 text-center"
-            >
-              <span className="font-mono text-[11px] font-black text-primary">
-                {step.id}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="space-y-4">
-          {steps.map((step) => (
-            <div
-              key={step.id}
-              className="rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm"
-            >
-              <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text">
-                {step.title}
-              </p>
-              <p className="mt-2 text-sm font-medium text-tech-text/75">
-                {step.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="relative hidden md:block">
-        <div className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 bg-tech-border/20" />
+      <div className="relative">
+        <div className="absolute right-10 top-0 h-full w-[2px] bg-tech-border/20 sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2" />
         <div
           ref={lineRef}
-          className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 bg-primary"
+          className="absolute right-10 top-0 h-full w-[2px] bg-primary sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2"
         />
 
-        <div className="space-y-16">
+        <div className="space-y-12 md:space-y-24">
           {steps.map((step, i) => {
             const isRight = i % 2 === 1;
             return (
               <div
                 key={step.id}
-                className="grid grid-cols-[1fr_80px_1fr] items-center gap-6"
+                className="grid grid-cols-[1fr_48px] items-center gap-4 md:grid-cols-[1fr_80px_1fr] md:gap-10"
               >
-                <div>
-                  {!isRight && (
-                    <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-5 shadow-hard-sm">
-                      <p className="font-display text-xl font-black uppercase tracking-tight text-tech-text">
-                        {step.title}
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-tech-text/75">
-                        {step.description}
-                      </p>
-                    </div>
-                  )}
+                {/* Left Card: Always visible on mobile, visible on desktop only if !isRight */}
+                <div className={isRight ? "md:invisible" : ""}>
+                  <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm md:p-6 lg:p-8">
+                    <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text md:text-xl">
+                      {step.title}
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-tech-text/75 md:text-base">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
 
+                {/* Marker Wrapper: Centered on desktop, on the right on mobile */}
                 <div className="relative z-10 flex justify-center">
                   <div
                     ref={(el) => {
                       markerWrapRefs.current[i] = el;
                     }}
-                    className="relative flex h-12 w-12 items-center justify-center"
+                    className="relative flex h-12 w-12 items-center justify-center md:h-16 md:w-16"
                   >
                     <div
                       ref={(el) => {
@@ -187,23 +157,22 @@ export function PrecisionTimeline() {
                       className="absolute inset-0 rounded-md border-2 border-tech-border bg-tech-surface shadow-hard-sm"
                     />
 
-                    <span className="relative z-10 font-mono text-sm font-black text-primary select-none">
+                    <span className="relative z-10 font-mono text-sm font-black text-primary select-none md:text-base">
                       {step.id}
                     </span>
                   </div>
                 </div>
 
-                <div>
-                  {isRight && (
-                    <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-5 shadow-hard-sm">
-                      <p className="font-display text-xl font-black uppercase tracking-tight text-tech-text">
-                        {step.title}
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-tech-text/75">
-                        {step.description}
-                      </p>
-                    </div>
-                  )}
+                {/* Right Card: Hidden on mobile, visible on desktop only if isRight */}
+                <div className={`hidden md:block ${!isRight ? "md:invisible" : ""}`}>
+                  <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm md:p-6 lg:p-8">
+                    <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text md:text-xl">
+                      {step.title}
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-tech-text/75 md:text-base">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
