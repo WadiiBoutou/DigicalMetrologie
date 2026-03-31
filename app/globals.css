@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
-/* Class-based dark mode (Tailwind v4) */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* Precision Red & Steel — "Mewo-brutalist": rounded 12px + offset shadow on curve */
 :root {
-  --app-bg: #ffffff;
+  /* Brand Colors */
+  --brand-primary: #b3262f;
+  --brand-primary-rgb: 179, 38, 47;
+  --brand-secondary: #daa971;
+  --brand-secondary-rgb: 218, 169, 113;
+  --brand-accent: #0a0a0a;
+  --brand-accent-rgb: 10, 10, 10;
+  /* Third-party marks (not core brand, but tokenized for consistency) */
+  --brand-whatsapp: #25d366;
+  --brand-whatsapp-rgb: 37, 211, 102;
+
+  /* UI Surface Colors */
+  --app-bg: #f8f0da;
+  --app-bg-rgb: 248, 240, 218;
   --app-surface: #f1f5f9;
   --app-surface-muted: #f1f5f9;
   --app-text: #0a0a0a;
@@ -13,87 +22,56 @@
   --app-border: #0a0a0a;
   --app-muted: #64748b;
   --app-footer-bg: #0a0a0a;
-  /* Mewo-brutalist offset silhouette — black on light surfaces */
+  --primary-foreground: #ffffff;
+  --primary-foreground-rgb: 255, 255, 255;
+
+  /* Shadows (Mewo-brutalist) */
   --brutal-shadow: #000000;
   --app-shadow: var(--brutal-shadow);
-  --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-  --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-  --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+  /* Single global elevation control across all components */
+  --app-shadow-elevation: 4px;
+  --app-shadow-hard: var(--app-shadow-elevation) var(--app-shadow-elevation) 0px var(--app-shadow);
+  --app-shadow-hard-sm: calc(var(--app-shadow-elevation) - 1px) calc(var(--app-shadow-elevation) - 1px) 0px var(--app-shadow);
+  --app-shadow-hard-hover: calc(var(--app-shadow-elevation) + 2px) calc(var(--app-shadow-elevation) + 2px) 0px var(--app-shadow);
+
+  /* Layout primitives (shared radii / motion) */
+  --radius-brutal: 0.75rem;
+  --transition-brutal: color, background-color, border-color, text-decoration-color, box-shadow, transform;
+  --duration-brutal: 150ms;
+  /* Elevation shadow for outlined display type */
+  --text-precision-elev: color-mix(in srgb, var(--app-text) 95%, transparent);
+
+  /* Utilities */
   --app-blueprint-line: rgba(10, 10, 10, 0.1);
+  /* Same token as vertical grid line (90deg rotation uses same contrast) */
   --app-blueprint-line-90: rgba(10, 10, 10, 0.1);
   --app-body-grid: rgba(10, 10, 10, 0.1);
-  /* Logo red — sole high-contrast CTA */
-  --app-primary: #b3262f;
-  --app-on-primary: #ffffff;
-  --app-secondary: #64748b;
-  --app-on-secondary: #f8fafc;
-  --app-accent: #0a0a0a;
   --app-brutalist-shadow: #0a0a0a;
   --app-tech-brand: #475569;
+
+  /* Tech Icons */
   --tech-icon-bg: #f1f5f9;
   --tech-icon-border: #0a0a0a;
   --tech-icon-shadow: #0a0a0a;
   --tech-icon-tap: #334155;
   --tech-icon-on-tap: #f8fafc;
-  --tech-icon-stroke: var(--app-primary);
+  --tech-icon-stroke: var(--brand-primary);
+
+  /* Tailwind Standard Mappings */
   --background: var(--app-bg);
   --foreground: var(--app-body);
   --card: var(--app-surface);
-  --primary: var(--app-primary);
-  --secondary: var(--app-secondary);
-  --accent: var(--app-accent);
+  --primary: var(--brand-primary);
+  --secondary: var(--brand-secondary);
+  --accent: var(--brand-accent);
   --border: var(--app-border);
-  --color-bg: var(--app-bg);
-  --color-ink: var(--app-body);
 }
 
-.dark {
-  --app-bg: #0a0a0a;
-  --app-surface: #141414;
-  --app-surface-muted: #171717;
-  --app-text: #ffffff;
-  --app-body: #f1f5f9;
-  --app-border: #404040;
-  --app-muted: #94a3b8;
-  --app-footer-bg: #0a0a0a;
-  /* Steel / soft white silhouette — visible on black & dark grey */
-  --brutal-shadow: #f1f5f9;
-  --app-shadow: var(--brutal-shadow);
-  --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-  --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-  --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
-  --app-blueprint-line: rgba(255, 255, 255, 0.2);
-  --app-blueprint-line-90: rgba(255, 255, 255, 0.2);
-  --app-body-grid: rgba(255, 255, 255, 0.2);
-  --app-primary: #b3262f;
-  --app-on-primary: #ffffff;
-  --app-secondary: #64748b;
-  --app-on-secondary: #f8fafc;
-  --app-accent: #ffffff;
-  --app-brutalist-shadow: rgba(255, 255, 255, 0.25);
-  --app-tech-brand: #94a3b8;
-  --tech-icon-bg: #1a1a1a;
-  --tech-icon-border: #525252;
-  --tech-icon-shadow: rgba(0, 0, 0, 0.85);
-  --tech-icon-tap: #404040;
-  --tech-icon-on-tap: #f8fafc;
-  --tech-icon-stroke: var(--app-primary);
-  --background: var(--app-bg);
-  --foreground: var(--app-body);
-  --card: var(--app-surface);
-  --primary: var(--app-primary);
-  --secondary: var(--app-secondary);
-  --accent: var(--app-accent);
-  --border: var(--app-border);
-  --color-bg: var(--app-bg);
-  --color-ink: var(--app-body);
-}
-
-/* Offset shadows mirrored for RTL (uses current --app-shadow, light or dark) */
+/* Offset shadows mirrored for RTL */
 html[dir="rtl"] {
-  --app-shadow-hard: -4px 4px 0px var(--app-shadow);
-  --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
-  --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+  --app-shadow-hard: calc(-1 * var(--app-shadow-elevation)) var(--app-shadow-elevation) 0px var(--app-shadow);
+  --app-shadow-hard-sm: calc(-1 * (var(--app-shadow-elevation) - 1px)) calc(var(--app-shadow-elevation) - 1px) 0px var(--app-shadow);
+  --app-shadow-hard-hover: calc(-1 * (var(--app-shadow-elevation) + 2px)) calc(var(--app-shadow-elevation) + 2px) 0px var(--app-shadow);
 }
 
 @theme {
@@ -102,11 +80,13 @@ html[dir="rtl"] {
   --font-mono: var(--font-alexandria), ui-monospace, SFMono-Regular, monospace;
   --font-styrene: "Styrene A Medium", ui-sans-serif, system-ui, sans-serif;
 
-  --color-primary: var(--app-primary);
-  --color-primary-foreground: var(--app-on-primary);
-  --color-secondary: var(--app-secondary);
-  --color-secondary-foreground: var(--app-on-secondary);
-  --color-accent: var(--app-accent);
+  --color-primary: var(--brand-primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-whatsapp: var(--brand-whatsapp);
+  --color-secondary: var(--brand-secondary);
+  --color-secondary-foreground: var(--app-text);
+  --color-sand: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
   --color-tech-bg: var(--app-bg);
   --color-tech-surface: var(--app-surface);
   --color-tech-text: var(--app-text);
@@ -125,9 +105,7 @@ html[dir="rtl"] {
   html {
     color-scheme: light;
     overflow-x: clip;
-  }
-  html.dark {
-    color-scheme: dark;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -137,14 +115,11 @@ html[dir="rtl"] {
       linear-gradient(var(--app-body-grid) 1px, transparent 1px),
       linear-gradient(90deg, var(--app-body-grid) 1px, transparent 1px);
     background-size: 20px 20px;
+    background-attachment: fixed;
   }
 
   html[dir="rtl"] body {
     font-family: var(--font-cairo), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  }
-
-  html[dir="rtl"] .font-mono {
-    font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
   }
 
   h1,
@@ -159,7 +134,7 @@ html[dir="rtl"] {
   input:not([type="checkbox"]):not([type="radio"]),
   select,
   textarea {
-    border-radius: 0.75rem;
+    border-radius: var(--radius-brutal);
   }
 }
 
@@ -171,131 +146,108 @@ html[dir="rtl"] {
     background-size: 20px 20px;
   }
 
-  /**
-   * bg-tech-text panels: dark band in light mode → light silhouette;
-   * in .dark, same token is a light band → dark silhouette.
-   */
+  /* Inverted Surfaces */
   .brutal-surface-invert {
-    --brutal-shadow: #f1f5f9;
+    --brutal-shadow: var(--app-surface);
     --app-shadow: var(--brutal-shadow);
-    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
+    --app-shadow-hard: var(--app-shadow-elevation) var(--app-shadow-elevation) 0px var(--app-shadow);
+    --app-shadow-hard-sm: calc(var(--app-shadow-elevation) - 1px) calc(var(--app-shadow-elevation) - 1px) 0px var(--app-shadow);
+    --app-shadow-hard-hover: calc(var(--app-shadow-elevation) + 2px) calc(var(--app-shadow-elevation) + 2px) 0px var(--app-shadow);
   }
 
   html[dir="rtl"] .brutal-surface-invert {
-    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
+    --app-shadow-hard: calc(-1 * var(--app-shadow-elevation)) var(--app-shadow-elevation) 0px var(--app-shadow);
+    --app-shadow-hard-sm: calc(-1 * (var(--app-shadow-elevation) - 1px)) calc(var(--app-shadow-elevation) - 1px) 0px var(--app-shadow);
+    --app-shadow-hard-hover: calc(-1 * (var(--app-shadow-elevation) + 2px)) calc(var(--app-shadow-elevation) + 2px) 0px var(--app-shadow);
   }
 
-  .dark .brutal-surface-invert {
-    --brutal-shadow: #0a0a0a;
-    --app-shadow: var(--brutal-shadow);
-    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
-  }
-
-  html[dir="rtl"] .dark .brutal-surface-invert {
-    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
-  }
-
-  /** Black / near-black controls (FAB, industrial chip): always light silhouette */
+  /* Semantic Brute Shadows */
   .brutal-on-dark {
-    --brutal-shadow: #f1f5f9;
+    --brutal-shadow: var(--app-surface);
     --app-shadow: var(--brutal-shadow);
-    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
   }
 
-  html[dir="rtl"] .brutal-on-dark {
-    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
-  }
-
-  /** Always black offset (WhatsApp FAB — no light/steel silhouette) */
   .brutal-shadow-black {
     --brutal-shadow: #000000;
     --app-shadow: var(--brutal-shadow);
-    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
   }
 
-  html[dir="rtl"] .brutal-shadow-black {
-    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
-  }
-
-  /** White / light cards on global dark canvas */
-  .dark .brutal-on-light {
-    --brutal-shadow: #0a0a0a;
-    --app-shadow: var(--brutal-shadow);
-    --app-shadow-hard: 4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: 2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: 6px 6px 0px var(--app-shadow);
-  }
-
-  html[dir="rtl"] .dark .brutal-on-light {
-    --app-shadow-hard: -4px 4px 0px var(--app-shadow);
-    --app-shadow-hard-sm: -2px 2px 0px var(--app-shadow);
-    --app-shadow-hard-hover: -6px 6px 0px var(--app-shadow);
-  }
-
-  /** Logo-red offset (Precision Lab CTAs on dark bands) */
   .shadow-hard-primary,
   .shadow-hard-sm-primary,
   .shadow-hard-hover-primary {
-    border-radius: 0.75rem;
+    border-radius: var(--radius-brutal);
   }
 
   .shadow-hard-primary {
-    box-shadow: 4px 4px 0px 0px var(--app-primary);
+    box-shadow: 4px 4px 0px 0px var(--brand-primary);
   }
 
   .shadow-hard-sm-primary {
-    box-shadow: 2px 2px 0px 0px var(--app-primary);
+    box-shadow: 2px 2px 0px 0px var(--brand-primary);
   }
 
   .shadow-hard-hover-primary {
-    box-shadow: 6px 6px 0px 0px var(--app-primary);
+    box-shadow: 6px 6px 0px 0px var(--brand-primary);
   }
 
   html[dir="rtl"] .shadow-hard-primary {
-    box-shadow: -4px 4px 0px 0px var(--app-primary);
+    box-shadow: -4px 4px 0px 0px var(--brand-primary);
   }
 
-  html[dir="rtl"] .shadow-hard-sm-primary {
-    box-shadow: -2px 2px 0px 0px var(--app-primary);
-  }
-
-  html[dir="rtl"] .shadow-hard-hover-primary {
-    box-shadow: -6px 6px 0px 0px var(--app-primary);
-  }
-
-  /** Mewo-brutalist: offset shadow follows rounded rect (12px) */
   .shadow-hard,
   .shadow-hard-sm,
   .shadow-hard-hover {
-    border-radius: 0.75rem;
+    border-radius: var(--radius-brutal);
   }
 
-  /** Blocky headline (e.g. "Precision"); LTR offset → RTL mirror */
+  .shadow-control {
+    box-shadow: var(--app-shadow-hard-sm);
+  }
+
+  .shadow-control:hover {
+    box-shadow: var(--app-shadow-hard);
+  }
+
+  /* Speech-bubble tail: same brutal offset shadow as cards (inherits RTL from html[dir]) */
+  .brutal-speech-tail {
+    box-shadow: var(--app-shadow-hard-sm);
+  }
+
   .headline-brutalist {
     text-shadow: 2px 2px 0 var(--app-brutalist-shadow);
   }
 
-  html[dir="rtl"] .headline-brutalist {
-    text-shadow: -2px 2px 0 var(--app-brutalist-shadow);
+  .text-precision {
+    color: var(--brand-primary) !important;
+    /* Clean outline + single elevation shadow (no double-shadow look) */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+    text-shadow:
+      -1px 0 0 var(--app-text),
+      1px 0 0 var(--app-text),
+      0 -1px 0 var(--app-text),
+      0 1px 0 var(--app-text),
+      -1px -1px 0 var(--app-text),
+      1px -1px 0 var(--app-text),
+      -1px 1px 0 var(--app-text),
+      1px 1px 0 var(--app-text),
+      3px 5px 0 var(--text-precision-elev);
   }
 
-  .product-image {
-    @apply dark:brightness-[0.85] dark:contrast-110;
+  html[dir="rtl"] .text-precision {
+    text-shadow:
+      -1px 0 0 var(--app-text),
+      1px 0 0 var(--app-text),
+      0 -1px 0 var(--app-text),
+      0 1px 0 var(--app-text),
+      -1px -1px 0 var(--app-text),
+      1px -1px 0 var(--app-text),
+      -1px 1px 0 var(--app-text),
+      1px 1px 0 var(--app-text),
+      -3px 5px 0 var(--text-precision-elev);
+  }
+
+  html[dir="rtl"] .headline-brutalist {
+    text-shadow: -2px 2px 0 var(--app-brutalist-shadow);
   }
 }

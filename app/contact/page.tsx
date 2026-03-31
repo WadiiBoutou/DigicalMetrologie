@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { ArrowRight, CheckCircle2, ChevronDown, Minus, Send, ShoppingCart, Trash2 } from "lucide-react";
 import { onCatalogueImageError } from "@/lib/catalogue-image";
@@ -72,21 +73,21 @@ function ContactContent({
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="brutal-surface-invert relative w-full max-w-lg overflow-hidden rounded-xl border-2 border-tech-muted bg-tech-text p-12 text-center text-white shadow-hard dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand"
+          className="brutal-surface-invert relative w-full max-w-lg overflow-hidden rounded-xl border-2 border-tech-muted bg-tech-text p-12 text-center text-white shadow-hard [&_h2]:text-white"
         >
           <div className="mb-8 inline-flex h-20 w-20 items-center justify-center border-2 border-primary bg-tech-bg text-primary shadow-hard-sm">
             <CheckCircle2 className="h-10 w-10" />
           </div>
-          <h2 className="font-display mb-4 text-3xl font-bold uppercase tracking-tight text-white dark:text-tech-brand">
+          <h2 className="font-display mb-4 text-3xl font-bold uppercase tracking-tight text-white">
             {t("contactSuccessTitle")}
           </h2>
-          <p className="text-tech-bg/80 dark:text-tech-brand/85">
+          <p className="text-tech-bg/80">
             {t("contactSuccessBody")}
           </p>
           <button
             onClick={() => setSubmitted(false)}
             formNoValidate
-            className="mt-8 rounded-xl border-2 border-white/20 bg-tech-surface/10 px-6 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-tech-surface/20 dark:border-tech-brand/30 dark:text-tech-brand"
+            className="mt-8 rounded-xl border-2 border-white/20 bg-tech-surface/10 px-6 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-tech-surface/20"
           >
             {t("contactBackForm")}
           </button>
@@ -128,11 +129,13 @@ function ContactContent({
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.product.id} className="group flex items-center gap-4 rounded-xl border-2 border-tech-border/10 bg-tech-bg/20 p-4 transition-all hover:bg-tech-bg/40">
-                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard-sm">
-                       <img
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard-sm">
+                       <Image
                          src={item.product.image}
                          alt={item.product.name}
-                         className="product-image h-full w-full object-cover"
+                         fill
+                         sizes="64px"
+                         className="object-cover"
                          onError={onCatalogueImageError}
                        />
                     </div>
@@ -209,13 +212,13 @@ function ContactContent({
               <div className="flex flex-col">
                 <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelEmail")}</label>
                 <input 
-                  required 
-                  name="email"
-                  type="email" 
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder={t("contactPhEmail")} 
-                  className="h-12 w-full rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold placeholder:text-tech-muted/40 focus:border-primary focus:outline-none focus:ring-0" 
+                   required 
+                   name="email"
+                   type="email" 
+                   value={formData.email}
+                   onChange={handleChange}
+                   placeholder={t("contactPhEmail")} 
+                   className="h-12 w-full rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold placeholder:text-tech-muted/40 focus:border-primary focus:outline-none focus:ring-0" 
                 />
               </div>
               <div className="flex flex-col">

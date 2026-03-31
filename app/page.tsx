@@ -1,40 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ComponentType } from "react";
+import { useState, type ReactNode } from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
-import { ArrowRight, BadgeCheck, ShoppingCart, Wrench } from "lucide-react";
+import { ArrowRight, Hourglass, ShoppingCart, Wrench } from "lucide-react";
 import { AppShell } from "@/components/digical/AppShell";
 import { useDigicalI18n } from "@/components/digical/language";
 import { useDigicalCart } from "@/components/digical/useDigicalCart";
-import { cn } from "@/lib/utils";
+import { PrecisionClock } from "@/components/PrecisionClock";
 
-type PillarLucide = ComponentType<{ className?: string; strokeWidth?: number }>;
+/** Match pillar card surface (tech-surface) on black disc */
+const pillarGlyphProps = {
+  className: "h-7 w-7 shrink-0 text-tech-surface",
+  strokeWidth: 2 as const,
+  fill: "currentColor" as const,
+  stroke: "currentColor" as const,
+};
 
-function PillarIcon({
-  icon: Icon,
-  isActive,
-}: {
-  icon: PillarLucide;
-  isActive: boolean;
-}) {
+function PillarIcon({ children, isActive }: { children: ReactNode; isActive: boolean }) {
   return (
     <motion.div
-      className={cn(
-        "relative mb-6 flex h-16 w-16 items-center justify-center",
-        "rounded-xl border-2 border-tech-border bg-tech-bg shadow-hard",
-        "group-hover:shadow-hard-hover",
-        isActive && "shadow-hard-hover",
-      )}
-      animate={isActive ? { x: -2, y: -2 } : { x: 0, y: 0 }}
-      whileHover={{ x: -2, y: -2 }}
+      className="mb-6 flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-black"
+      animate={isActive ? { scale: 1.06 } : { scale: 1 }}
+      whileHover={{ scale: 1.06 }}
       transition={{ type: "spring", stiffness: 420, damping: 24 }}
     >
-      <span className="pointer-events-none absolute left-0 top-0 h-2 w-2 border-l-2 border-t-2 border-tech-border" />
-      <span className="pointer-events-none absolute right-0 top-0 h-2 w-2 border-r-2 border-t-2 border-tech-border" />
-      <span className="pointer-events-none absolute bottom-0 left-0 h-2 w-2 border-b-2 border-l-2 border-tech-border" />
-      <span className="pointer-events-none absolute bottom-0 right-0 h-2 w-2 border-b-2 border-r-2 border-tech-border" />
-      <Icon className="h-10 w-10 text-primary" strokeWidth={1.75} aria-hidden />
+      {children}
     </motion.div>
   );
 }
@@ -44,25 +36,21 @@ function HomeContent() {
   const [pillarHover, setPillarHover] = useState<string | null>(null);
 
   const pillars = [
-    {
-      id: "vente",
-      title: t("homePillarVenteTitle"),
-      icon: ShoppingCart,
-      desc: t("homePillarVenteDesc"),
-    },
-    {
-      id: "reparation",
-      title: t("homePillarRepTitle"),
-      icon: Wrench,
-      desc: t("homePillarRepDesc"),
-    },
-    {
-      id: "etalonnage",
-      title: t("homePillarEtalTitle"),
-      icon: BadgeCheck,
-      desc: t("homePillarEtalDesc"),
-    },
+    { id: "vente", title: t("homePillarVenteTitle"), desc: t("homePillarVenteDesc") },
+    { id: "reparation", title: t("homePillarRepTitle"), desc: t("homePillarRepDesc") },
+    { id: "etalonnage", title: t("homePillarEtalTitle"), desc: t("homePillarEtalDesc") },
   ] as const;
+
+  function pillarGlyph(id: (typeof pillars)[number]["id"]): ReactNode {
+    switch (id) {
+      case "vente":
+        return <ShoppingCart {...pillarGlyphProps} aria-hidden />;
+      case "reparation":
+        return <Wrench {...pillarGlyphProps} aria-hidden />;
+      case "etalonnage":
+        return <Hourglass {...pillarGlyphProps} aria-hidden />;
+    }
+  }
 
   const kpiRows = [
     { value: "15+", label: t("homeKpiL1") },
@@ -109,249 +97,205 @@ function HomeContent() {
     { q: t("homeFaq2Q"), a: t("homeFaq2A") },
     { q: t("homeFaq3Q"), a: t("homeFaq3A") },
   ] as const;
+  const featuredTestimonials = [
+    { quote: quotes[0], name: "Goraniie", role: "Novarenir" },
+    { quote: quotes[1], name: "Georota", role: "Lassaorandsre" },
+  ] as const;
+  const featuredFaq = faqs[0];
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-tech-bg px-4 py-20 md:px-10 md:py-32">
-        <div className="blueprint-bg absolute inset-0 opacity-40" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="flex flex-col items-center gap-12 text-center md:items-start md:text-start lg:flex-row lg:items-center">
-            <div className="flex-1">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                <h1 className="mb-6 font-display text-4xl font-[900] uppercase leading-[1] tracking-tighter sm:text-5xl md:text-7xl lg:text-8xl">
-                  {t("homeHeroLine1")} <br />
-                  <span className="text-tech-text">{t("homeHeroLine2Prefix")}</span>
-                  <span className="text-primary headline-brutalist">{t("homeHeroLine2Emphasis")}</span>
-                </h1>
-                <p className="mb-10 max-w-xl border-s-4 border-primary ps-6 font-sans text-lg font-medium text-tech-text/80 md:text-xl">
-                  {t("homeHeroLead")}
-                </p>
-                <div className="flex w-full max-w-xl flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-4">
-                  <Link href="/catalogue" className="flex h-14 w-full items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-8 font-styrene text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-hard transition-all hover:-translate-y-1 hover:shadow-hard-hover sm:w-auto sm:px-10">
-                    {t("homeCtaCatalog")}
-                    <ArrowRight className="ms-2 h-5 w-5 shrink-0" />
-                  </Link>
-                  <Link href="/contact" className="flex h-14 w-full items-center justify-center rounded-xl border-2 border-tech-border bg-tech-surface px-8 font-styrene text-sm font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-1 hover:shadow-hard sm:w-auto sm:px-10">
-                    {t("homeCtaQuote")}
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-            <div className="relative w-full flex-1">
-              <div className="relative mx-auto aspect-square max-w-lg overflow-hidden rounded-xl border-2 border-tech-border shadow-hard lg:mx-0 lg:max-w-none">
-                <img
-                  src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=1400&h=1400&fm=jpg&fit=crop&q=80"
-                  alt={t("homeHeroImgAlt")}
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]"
-                  loading="eager"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* The Three Pillars — in .dark, bg-tech-text is light; use dark text for contrast (background unchanged). */}
-      <section className="brutal-surface-invert bg-tech-text py-24 text-white dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
-        <div className="mx-auto max-w-7xl px-4 md:px-10">
-          <div className="mb-16 text-center md:text-left">
-            <h2 className="mb-4 font-display text-3xl font-black uppercase tracking-tight text-white dark:text-tech-brand md:text-4xl">
-              {t("homePillarsTitle")}
-            </h2>
-            <div className="h-1 w-20 bg-primary" />
-          </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {pillars.map((p) => (
-              <div
-                key={p.id}
-                onMouseEnter={() => setPillarHover(p.id)}
-                onMouseLeave={() => setPillarHover(null)}
-                className="group rounded-xl border-2 border-white/10 bg-tech-surface/5 p-8 transition-colors hover:bg-tech-surface/10"
-              >
-                <PillarIcon icon={p.icon} isActive={pillarHover === p.id} />
-                <h3 className="mb-3 font-display text-2xl font-bold uppercase tracking-tight text-white dark:text-tech-brand">
-                  {p.title}
-                </h3>
-                <p className="mb-6 text-sm text-white/60 dark:text-tech-brand/80">{p.desc}</p>
-                <Link href={p.id === "vente" ? "/catalogue" : "/services"} className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-primary hover:gap-2 transition-all">
-                  {t("homePillarMore")} <ArrowRight className="ms-2 h-4 w-4" />
+      <section className="relative px-4 pb-8 pt-8 lg:px-10 lg:pb-6">
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col overflow-hidden rounded-3xl border-2 border-app-border bg-tech-bg shadow-hard lg:flex-row"
+          >
+            {/* Left Content */}
+            <div className="flex flex-col justify-center p-8 lg:w-[60%] lg:p-16">
+              <h1 className="mb-6 font-display text-5xl font-black uppercase leading-[0.9] tracking-tighter sm:text-7xl md:text-8xl">
+                <span className="block text-app-text">{t("homeHeroLine1")}</span>
+                <span className="text-precision block">{t("homeHeroLine2Emphasis")}</span>
+              </h1>
+              <p className="mb-10 max-w-lg font-display text-lg font-bold uppercase tracking-tight text-app-text/80 md:text-xl">
+                {t("homeHeroLead")}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/catalogue"
+                  className="inline-flex h-12 items-center justify-center rounded-xl border-2 border-black bg-primary px-8 font-display text-xs font-black uppercase tracking-tight text-white shadow-hard-sm transition-all hover:-translate-y-0.5 hover:shadow-hard"
+                >
+                  {t("homeCtaCatalog")}
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex h-12 items-center justify-center rounded-xl border-2 border-black bg-tech-surface px-8 font-display text-xs font-black uppercase tracking-tight text-app-text shadow-control transition-all hover:-translate-y-0.5"
+                >
+                  {t("homeCtaQuote")}
                 </Link>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Impact Metrics */}
-      <section className="relative overflow-hidden border-y border-tech-border bg-tech-surface py-24">
-        <div className="blueprint-bg absolute inset-0 opacity-20" />
-        <div className="relative mx-auto max-w-7xl px-4 md:px-10">
-          <div className="mb-12 max-w-3xl">
-            <span className="font-mono text-xs font-bold uppercase text-primary">{t("homeKpiKicker")}</span>
-            <h2 className="mt-2 font-display text-4xl font-black uppercase tracking-tight text-tech-text md:text-5xl">
-              {t("homeKpiTitle")}
-            </h2>
-            <p className="mt-4 text-base font-medium text-tech-text/70">
-              {t("homeKpiLead")}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {kpiRows.map((kpi, idx) => (
-              <motion.div
-                key={kpi.label}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.35, delay: idx * 0.08 }}
-                className="rounded-xl border-2 border-tech-border bg-tech-bg/70 p-6 shadow-hard"
-              >
-                <div className="font-display text-4xl font-black text-primary">{kpi.value}</div>
-                <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-wide text-tech-text">
-                  {kpi.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="bg-tech-bg py-24">
-        <div className="mx-auto max-w-7xl px-4 md:px-10">
-          <div className="max-w-3xl">
-            <h2 className="font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
-              {t("homeProcTitle")}
-            </h2>
-            <p className="mt-4 max-w-xl text-base font-medium text-tech-text/75">
-              {t("homeProcLead")}
-            </p>
-            <div className="mt-8 space-y-4">
-              {processSteps.map((step, idx) => (
-                <motion.div
-                  key={step}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.3, delay: idx * 0.08 }}
-                  className="flex items-start gap-4 rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm"
-                >
-                  <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 border-tech-border bg-primary font-mono text-[10px] font-black text-primary-foreground">
-                    {idx + 1}
-                  </span>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-tech-text">{step}</p>
-                </motion.div>
-              ))}
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Showcase Gallery */}
-      <section className="brutal-surface-invert bg-tech-text py-24 text-white dark:text-tech-brand [&_h2]:text-white [&_h2]:dark:text-tech-brand">
-        <div className="mx-auto max-w-7xl px-4 md:px-10">
-          <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <span className="font-mono text-xs font-bold uppercase text-tech-muted dark:text-tech-brand/70">
-                {t("homeCaseKicker")}
-              </span>
-              <h2 className="mt-2 font-display text-4xl font-black uppercase tracking-tight text-white dark:text-tech-brand md:text-5xl">
-                {t("homeCaseTitle")}
-              </h2>
+            {/* Right Image */}
+            <div className="relative lg:w-[40%] p-8 lg:p-12">
+               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-app-border">
+                  <Image
+                    src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=1400&h=1400&fm=jpg&fit=crop&q=80"
+                    alt={t("homeHeroImgAlt")}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover"
+                  />
+               </div>
             </div>
-            <p className="max-w-xl text-sm font-medium text-white/70 dark:text-tech-brand/85">
-              {t("homeCaseLead")}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {showcaseCards.map((item, idx) => (
-              <motion.div
-                key={item.kicker}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.35, delay: idx * 0.1 }}
-                className="group relative overflow-hidden rounded-xl border-2 border-white/15 bg-black/20 shadow-hard"
-              >
-                <img
-                  src={item.src}
-                  alt={item.alt}
-                  className="h-72 w-full object-cover opacity-85 transition duration-500 group-hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-tech-muted">
-                    {item.kicker}
-                  </p>
-                  <p className="mt-1 text-sm font-semibold uppercase text-white">{item.title}</p>
-                  <p className="mt-2 text-xs font-medium leading-snug text-white/80">{item.blurb}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Testimonials + FAQ + CTA */}
-      <section className="bg-tech-surface py-24">
-        <div className="mx-auto max-w-7xl px-4 md:px-10">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-            <div>
-              <h2 className="font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
-                {t("homeTrustTitle")}
+      {/* Mid-page: each block is its own card (no outer grouper) */}
+      <section className="px-4 pb-8 lg:px-10 lg:pb-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+            {/* Piliers */}
+            <div className="rounded-3xl border-2 border-app-border bg-tech-bg p-6 shadow-hard lg:p-8">
+              <h2 className="mb-6 font-display text-3xl font-black uppercase tracking-tight text-app-text md:text-4xl">
+                {t("homePillarsTitle")}
               </h2>
-              <div className="mt-8 space-y-5">
-                {quotes.map((quote) => (
-                  <motion.blockquote
-                    key={quote}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.35 }}
-                    className="rounded-xl border-2 border-tech-border bg-tech-bg p-5 shadow-hard-sm"
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                {pillars.map((p) => (
+                  <div
+                    key={p.id}
+                    onMouseEnter={() => setPillarHover(p.id)}
+                    onMouseLeave={() => setPillarHover(null)}
+                    className="group rounded-xl border-2 border-app-border bg-tech-surface p-5 shadow-hard-sm transition-all hover:-translate-y-0.5 hover:shadow-hard"
                   >
-                    <p className="text-sm font-medium text-tech-text/80">&ldquo;{quote}&rdquo;</p>
-                  </motion.blockquote>
+                    <PillarIcon isActive={pillarHover === p.id}>{pillarGlyph(p.id)}</PillarIcon>
+                    <h3 className="mb-2 font-display text-2xl font-black uppercase tracking-tight text-app-text">{p.title}</h3>
+                    <p className="mb-4 text-sm font-semibold text-app-text/80">{p.desc}</p>
+                    <Link href={p.id === "vente" ? "/catalogue" : "/services"} className="inline-flex items-center text-xs font-black uppercase tracking-wider text-app-text hover:text-primary">
+                      {t("homePillarMore")} <ArrowRight className="ms-2 h-4 w-4" />
+                    </Link>
+                  </div>
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-5">
-              {faqs.map((faq) => (
-                <div key={faq.q} className="rounded-xl border-2 border-tech-border bg-tech-surface p-5 shadow-hard-sm">
-                  <p className="font-display text-lg font-bold uppercase tracking-tight">{faq.q}</p>
-                  <p className="mt-2 text-sm font-medium text-tech-text/75">{faq.a}</p>
+
+            {/* KPI */}
+            <div className="rounded-3xl border-2 border-app-border bg-tech-bg p-6 shadow-hard lg:p-8">
+              <h2 className="text-center font-display text-4xl font-black uppercase tracking-tight text-app-text md:text-5xl">
+                {t("homeKpiTitle")}
+              </h2>
+              <p className="mx-auto mt-2 max-w-2xl text-center text-base font-semibold text-app-text/80">
+                {t("homeKpiLead")}
+              </p>
+              <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                {kpiRows.map((kpi, idx) => (
+                  <motion.div
+                    key={kpi.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: 0.35, delay: idx * 0.08 }}
+                    className="rounded-xl border-2 border-app-border bg-tech-surface p-4 text-center shadow-hard-sm"
+                  >
+                    <div className="font-display text-4xl font-black text-primary">{kpi.value}</div>
+                    <p className="mt-1 font-display text-xl font-black uppercase text-app-text">{kpi.label}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Process — full-width card (then Industrie below, same pattern as Piliers → KPI) */}
+            <div className="rounded-3xl border-2 border-app-border bg-tech-bg p-6 shadow-hard lg:p-8">
+              <div className="flex flex-col gap-8">
+                <div className="min-w-0">
+                  <h2 className="font-display text-4xl font-black uppercase tracking-tight text-app-text">{t("homeProcTitle")}</h2>
+                  <p className="mt-3 text-sm font-semibold text-app-text/80">{t("homeProcLead")}</p>
                 </div>
-              ))}
-              <div className="brutal-surface-invert mt-2 rounded-xl border-2 border-tech-muted bg-tech-text p-6 text-white shadow-hard dark:text-tech-brand [&_h3]:text-white [&_h3]:dark:text-tech-brand">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-tech-muted dark:text-tech-brand/70">
-                  {t("homeCtaBoxKicker")}
-                </p>
-                <h3 className="mt-2 font-display text-2xl font-black uppercase text-white dark:text-tech-brand">
-                  {t("homeCtaBoxTitle")}
-                </h3>
-                <p className="mt-2 text-sm font-medium text-white/75 dark:text-tech-brand/85">
-                  {t("homeCtaBoxLead")}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <Link
-                    href="/contact"
-                    className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-tech-border bg-primary px-6 font-styrene text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm-primary transition-all hover:-translate-y-0.5 hover:shadow-hard-hover-primary"
-                  >
-                    {t("homeCtaBoxPrimary")}
-                  </Link>
-                  <Link
-                    href="/catalogue"
-                    className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white dark:border-tech-brand/30 dark:text-tech-brand"
-                  >
-                    {t("homeCtaBoxSecondary")}
-                  </Link>
+                <div className="min-w-0 w-full">
+                  <PrecisionClock />
                 </div>
               </div>
             </div>
-          </div>
+
+            <div className="rounded-3xl border-2 border-app-border bg-tech-bg p-6 shadow-hard lg:p-8">
+              <h2 className="font-display text-4xl font-black uppercase tracking-tight text-app-text">{t("homeCaseTitle")}</h2>
+              <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+                {showcaseCards.map((item, idx) => (
+                  <motion.div
+                    key={item.kicker}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: 0.35, delay: idx * 0.08 }}
+                    className="group relative aspect-square w-full overflow-hidden rounded-xl border-2 border-app-border bg-black/10 shadow-hard-sm"
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      sizes="(max-width: 640px) 30vw, (max-width: 1024px) 28vw, 280px"
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/75 to-transparent p-1.5 sm:p-2">
+                      <p className="font-display text-[10px] font-black uppercase leading-snug text-white sm:text-xs md:text-sm">{item.title}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Témoignages + FAQ */}
+            <div className="grid grid-cols-1 gap-8 rounded-3xl border-2 border-app-border bg-tech-bg p-6 shadow-hard lg:grid-cols-2 lg:p-8">
+              <div className="min-w-0">
+                <h2 className="font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
+                  {t("homeTrustTitle")}
+                </h2>
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {featuredTestimonials.map((item) => (
+                    <motion.blockquote
+                      key={item.name}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.35 }}
+                      className="relative rounded-xl border-2 border-app-border bg-tech-surface p-4 pb-7 shadow-hard-sm"
+                    >
+                      <p className="text-sm font-semibold text-app-text/85">&ldquo;{item.quote}&rdquo;</p>
+                      <p className="mt-4 text-sm font-black uppercase leading-none text-app-text">{item.name}</p>
+                      <p className="mt-1 text-sm font-semibold leading-none text-app-text/80">{item.role}</p>
+                      <span className="brutal-speech-tail absolute -bottom-3 left-7 h-5 w-5 rotate-45 border-b-2 border-r-2 border-app-border bg-tech-surface" />
+                    </motion.blockquote>
+                  ))}
+                </div>
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
+                  {t("homeCtaBoxTitle")}
+                </h2>
+                <div className="brutal-surface-invert mt-6 rounded-xl border-2 border-tech-muted bg-tech-text p-5 text-white shadow-hard md:p-6">
+                  <h3 className="font-display text-5xl font-black uppercase leading-none text-white">FAQ</h3>
+                  <p className="mt-3 text-sm font-semibold text-white/75">
+                    {featuredFaq.a}
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <Link
+                      href="/contact"
+                      className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-black bg-tech-surface px-6 font-styrene text-xs font-bold uppercase tracking-wider text-black shadow-hard-sm transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-black hover:shadow-hard-hover-primary"
+                    >
+                      {t("homeCtaBoxPrimary")}
+                    </Link>
+                    <Link
+                      href="/catalogue"
+                      className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-white/30 bg-tech-surface/10 px-6 font-styrene text-xs font-bold uppercase tracking-wider text-white"
+                    >
+                      {t("homeCtaBoxSecondary")}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </section>
     </div>

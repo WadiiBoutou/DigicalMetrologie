@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 import { ArrowRight, Check, Minus, Plus, ShoppingBag } from "lucide-react";
 import { onCatalogueImageError } from "@/lib/catalogue-image";
 import { getProductDescription, PRODUCTS } from "@/lib/products";
@@ -31,12 +32,13 @@ function ProductDetailContent({
       <div className="mb-12 flex flex-col gap-10 lg:flex-row">
         <div className="flex-1">
           <div className="relative aspect-square overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={product.image}
               alt={product.name}
-              referrerPolicy="no-referrer"
-              className="product-image h-full w-full object-contain p-8"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-contain p-8"
               onError={onCatalogueImageError}
             />
           </div>
@@ -48,7 +50,7 @@ function ProductDetailContent({
           <h1 className="mb-4 font-display text-3xl font-bold uppercase text-tech-text lg:text-4xl" lang="fr">
             {product.name}
           </h1>
-          <p className="mb-8 font-sans text-tech-body/85 dark:text-tech-body/90">{description}</p>
+          <p className="mb-8 font-sans text-tech-body/85">{description}</p>
           <div className="mt-auto flex flex-col gap-4 border-t border-tech-border pt-6 sm:flex-row">
             <div className="flex h-12 w-full items-center overflow-hidden rounded-xl border-2 border-tech-border bg-tech-surface shadow-hard-sm sm:w-32">
               <button
@@ -76,10 +78,8 @@ function ProductDetailContent({
               type="button"
               onClick={() => onAddToCart(product)}
               className={cn(
-                "flex h-12 flex-1 items-center justify-center gap-2 font-styrene font-bold uppercase shadow-hard-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-hard",
-                isInCart
-                  ? "rounded-xl border-2 border-tech-border bg-secondary text-secondary-foreground"
-                  : "rounded-xl border-2 border-transparent bg-primary text-primary-foreground",
+                "flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border-2 border-black font-styrene font-bold uppercase shadow-hard-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-hard",
+                isInCart ? "bg-green-900 text-white" : "bg-primary text-primary-foreground",
               )}
             >
               {isInCart ? <Check className="h-5 w-5" /> : <ShoppingBag className="h-5 w-5" />}
@@ -99,7 +99,7 @@ function ProductDetailContent({
                 <td className="border-e border-tech-border/10 bg-tech-bg/30 px-4 py-3 text-xs font-bold uppercase text-tech-text">
                   {k}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-tech-body/80">{v}</td>
+                <td className="px-4 py-3 text-sm text-gray-600">{v}</td>
               </tr>
             ))}
           </tbody>

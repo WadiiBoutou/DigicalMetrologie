@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Check, Menu, Minus, Plus, ShoppingCart, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -9,13 +10,9 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { onCatalogueImageError } from "@/lib/catalogue-image";
 import { useDigicalI18n } from "@/components/digical/language";
-import { ThemeToggle } from "@/components/digical/ThemeToggle";
 import type { Product } from "@/lib/types";
 
 export type DigicalRoute = "home" | "catalog" | "product" | "contact" | "services" | "expertise";
-
-/** Dark mode: B&W logos → warm off-white (navbar + footer) */
-const LOGO_IMG_DARK = "dark:[filter:brightness(0)_invert(1)_sepia(0.28)_saturate(1.45)_hue-rotate(8deg)_brightness(1.08)]";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -70,7 +67,7 @@ export function TechIcon({
       <Icon
         className="h-8 w-8"
         strokeWidth={2.5}
-        color={isPressed ? "var(--tech-icon-on-tap)" : "var(--app-primary)"}
+        color={isPressed ? "var(--tech-icon-on-tap)" : "var(--brand-primary)"}
       />
     </motion.div>
   );
@@ -109,63 +106,69 @@ export function Navbar({ cartCount, route }: { cartCount: number; route: Digical
   );
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b-2 border-tech-border bg-tech-bg/90 backdrop-blur-sm">
-      <div className="mx-auto flex min-h-[88px] max-w-7xl items-center justify-between gap-2 px-3 py-2 sm:px-4 md:h-[88px] md:px-10 md:py-0">
-        <div className="flex min-w-0 flex-1 items-center gap-4 md:flex-initial md:gap-8">
-          <Link href="/" className="group flex min-w-0 shrink items-center" onClick={() => setMobileOpen(false)}>
-            <div className="flex h-10 max-h-12 max-w-[min(220px,calc(100vw-12rem))] items-center overflow-hidden sm:h-12 sm:max-w-[280px]">
-              <img
+    <nav className="sticky top-4 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl">
+      <div className="flex min-h-[72px] items-center justify-between gap-4 rounded-2xl border-2 border-app-border bg-tech-bg px-4 py-2 shadow-hard md:px-8">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="group flex items-center" onClick={() => setMobileOpen(false)}>
+            <div className="relative flex h-10 w-44 items-center overflow-hidden sm:h-12 sm:w-56">
+              <Image
                 src="/logo-png.png"
-                alt="Digical"
-                className={cn(
-                  "h-full w-auto max-w-full object-contain object-left [image-rendering:-webkit-optimize-contrast] [image-rendering:crisp-edges]",
-                  "transition-all duration-300",
-                  LOGO_IMG_DARK,
-                )}
+                alt="Digical Metrologie Logo"
+                fill
+                priority
+                sizes="220px"
+                className="object-contain object-left [image-rendering:-webkit-optimize-contrast] [image-rendering:crisp-edges] transition-all duration-300"
               />
             </div>
           </Link>
-          <div className="hidden items-center gap-9 md:flex">
-            <Link className={cn("font-styrene text-sm font-medium uppercase tracking-wider hover:text-primary", route === "home" && "text-primary")} href="/">{t("navHome")}</Link>
-            <Link className={cn("font-styrene text-sm font-medium uppercase tracking-wider hover:text-primary", route === "catalog" && "text-primary")} href="/catalogue">{t("navCatalog")}</Link>
-            <Link className={cn("font-styrene text-sm font-medium uppercase tracking-wider hover:text-primary", route === "services" && "text-primary")} href="/services">{t("navServices")}</Link>
-            <Link className={cn("font-styrene text-sm font-medium uppercase tracking-wider hover:text-primary", route === "expertise" && "text-primary")} href="/expertise">{t("navExpertise")}</Link>
-            <Link className={cn("font-styrene text-sm font-medium uppercase tracking-wider hover:text-primary", route === "contact" && "text-primary")} href="/contact">{t("navContact")}</Link>
+          <div className="hidden items-center gap-6 lg:flex">
+            <Link className={cn("font-display text-sm font-black uppercase tracking-tight hover:text-primary transition-colors", route === "home" ? "text-primary" : "text-app-text")} href="/">{t("navHome")}</Link>
+            <Link className={cn("font-display text-sm font-black uppercase tracking-tight hover:text-primary transition-colors", route === "catalog" ? "text-primary" : "text-app-text")} href="/catalogue">{t("navCatalog")}</Link>
+            <Link className={cn("font-display text-sm font-black uppercase tracking-tight hover:text-primary transition-colors", route === "services" ? "text-primary" : "text-app-text")} href="/services">{t("navServices")}</Link>
+            <Link className={cn("font-display text-sm font-black uppercase tracking-tight hover:text-primary transition-colors", route === "expertise" ? "text-primary" : "text-app-text")} href="/expertise">{t("navExpertise")}</Link>
+            <Link className={cn("font-display text-sm font-black uppercase tracking-tight hover:text-primary transition-colors", route === "contact" ? "text-primary" : "text-app-text")} href="/contact">{t("navContact")}</Link>
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3 md:gap-8">
-          <ThemeToggle />
-          <button
-            type="button"
-            onClick={() => setLang(lang === "FR" ? "AR" : "FR")}
-            className="flex h-10 min-w-[2.75rem] items-center justify-center rounded-xl border-2 border-tech-border bg-tech-surface px-2 font-mono text-[10px] font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-[2px] hover:shadow-hard sm:min-w-0 sm:px-3 sm:text-[11px]"
-            aria-label={t("languageToggle")}
-            title={t("languageToggle")}
-          >
-            <span className="sm:hidden">{lang}</span>
-            <span className="hidden sm:inline">
-              {lang} / {lang === "FR" ? "AR" : "FR"}
-            </span>
-          </button>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-3 border-e border-app-border/20 pe-4 sm:flex">
+            <div className="flex h-10 items-center gap-2 rounded-xl border-2 border-app-border bg-tech-surface px-3 font-display text-[11px] font-black uppercase tracking-tight text-app-text shadow-control transition-all hover:-translate-y-0.5">
+              <button
+                type="button"
+                onClick={() => setLang("FR")}
+                className={cn("transition-colors", lang === "FR" ? "text-primary" : "hover:text-primary")}
+                aria-label="Français"
+                aria-pressed={lang === "FR"}
+              >
+                FR
+              </button>
+              <span className="text-app-border/60">|</span>
+              <button
+                type="button"
+                onClick={() => setLang("AR")}
+                className={cn("transition-colors", lang === "AR" ? "text-primary" : "hover:text-primary")}
+                aria-label="العربية"
+                aria-pressed={lang === "AR"}
+              >
+                AR
+              </button>
+            </div>
+          </div>
+
           <Link
             href="/contact"
-            className="flex h-10 max-w-[9.5rem] items-center justify-center gap-1.5 truncate rounded-xl border-2 border-tech-border bg-primary px-2 font-styrene text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-hard-sm hover:-translate-y-[2px] hover:shadow-hard sm:max-w-none sm:gap-2 sm:px-4 sm:text-xs"
+            className="brutal-shadow-black flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-black bg-primary px-4 font-display text-[11px] font-black uppercase tracking-tight text-white shadow-control transition-all hover:-translate-y-0.5"
             onClick={() => setMobileOpen(false)}
           >
-            <ShoppingCart className="h-4 w-4 shrink-0" />
-            <span className="min-w-0 truncate">
-              <span className="hidden min-[400px]:inline">{t("quote")} </span>({cartCount})
-            </span>
+            <span>{t("quote")} ({cartCount})</span>
           </Link>
+
           <button
             type="button"
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-tech-border bg-tech-surface text-tech-text shadow-hard-sm md:hidden"
-            aria-expanded={mobileOpen}
-            aria-controls="digical-mobile-nav"
-            aria-label={mobileOpen ? t("navCloseMenu") : t("navOpenMenu")}
+            className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-app-border bg-tech-bg text-app-text shadow-hard-sm lg:hidden focus:outline-none"
             onClick={() => setMobileOpen((o) => !o)}
           >
-            {mobileOpen ? <X className="h-5 w-5" strokeWidth={2.25} /> : <Menu className="h-5 w-5" strokeWidth={2.25} />}
+            {mobileOpen ? <X size={20} strokeWidth={3} /> : <Menu size={20} strokeWidth={3} />}
           </button>
         </div>
       </div>
@@ -265,8 +268,8 @@ export function ProductCard({
   const inCart = lineQuantity > 0;
   const [localQty, setLocalQty] = useState(1);
   const inCartShadow = isArabic
-    ? "[box-shadow:0_0_0_2px_var(--app-primary),-4px_4px_0px_var(--app-shadow)]"
-    : "[box-shadow:0_0_0_2px_var(--app-primary),4px_4px_0px_var(--app-shadow)]";
+    ? "[box-shadow:0_0_0_2px_var(--brand-primary),-4px_4px_0px_var(--app-shadow)]"
+    : "[box-shadow:0_0_0_2px_var(--brand-primary),4px_4px_0px_var(--app-shadow)]";
 
   useEffect(() => {
     if (!inCart) setLocalQty(1);
@@ -292,12 +295,12 @@ export function ProductCard({
     >
       <div className="relative h-[220px] overflow-hidden border-b border-tech-border/20 bg-tech-bg">
         <Link href={`/produit?id=${product.id}`} className="relative block h-full w-full">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={product.image}
             alt={product.name}
-            referrerPolicy="no-referrer"
-            className="product-image h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             onError={onCatalogueImageError}
           />
         </Link>
@@ -322,10 +325,8 @@ export function ProductCard({
               type="button"
               onClick={handleIconCart}
               className={cn(
-                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border-2 shadow-hard-sm transition-all duration-200",
-                inCart
-                  ? "border-tech-border bg-secondary text-secondary-foreground"
-                  : "border-transparent bg-primary text-primary-foreground",
+                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border-2 border-black shadow-hard-sm transition-all duration-200",
+                inCart ? "bg-green-900 text-white" : "bg-primary text-primary-foreground",
               )}
               aria-label={inCart ? t("removeFromQuote") : t("addToQuote")}
             >
@@ -366,13 +367,13 @@ export function ProductListRow({
       animate={{ opacity: 1, y: 0 }}
       className="flex w-full flex-wrap items-center gap-4 rounded-xl border-2 border-tech-border bg-tech-bg p-4 shadow-hard md:flex-nowrap"
     >
-      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border-2 border-tech-border bg-tech-surface">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border-2 border-tech-border bg-tech-surface">
+        <Image
           src={product.image}
           alt={product.name}
-          className="product-image h-full w-full object-cover"
-          referrerPolicy="no-referrer"
+          fill
+          sizes="96px"
+          className="object-cover"
           onError={onCatalogueImageError}
         />
       </div>
@@ -412,10 +413,8 @@ export function ProductListRow({
             else onSetLineQuantity(product, localQty);
           }}
           className={cn(
-            "shrink-0 rounded-lg border-2 px-4 py-2 text-xs font-bold uppercase shadow-hard-sm transition-all duration-200",
-            inCart
-              ? "border-tech-border bg-secondary text-secondary-foreground"
-              : "border-transparent bg-primary text-primary-foreground",
+            "shrink-0 rounded-lg border-2 border-black px-4 py-2 text-xs font-bold uppercase shadow-hard-sm transition-all duration-200",
+            inCart ? "bg-green-900 text-white" : "bg-primary text-primary-foreground",
           )}
         >
           {inCart ? t("remove") : t("add")}
@@ -433,14 +432,13 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 md:grid-cols-4 md:px-10">
         <div className="flex flex-col gap-4">
           <div className="flex flex-nowrap items-center gap-3">
-            <div className="shrink-0 rounded-sm p-2.5">
-              <img
+            <div className="relative h-10 w-32 shrink-0 rounded-sm p-2.5">
+              <Image
                 src="/LOGO.png"
                 alt="Digical Metrologie"
-                className={cn(
-                  "h-10 w-auto object-contain transition-all duration-300",
-                  LOGO_IMG_DARK,
-                )}
+                fill
+                sizes="128px"
+                className="object-contain transition-all duration-300"
               />
             </div>
             <span className="min-w-0 font-display text-xl font-black uppercase tracking-tight">
@@ -495,7 +493,7 @@ export function WhatsAppFloatButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("whatsappAria")}
-      className="brutal-shadow-black fixed z-50 inline-flex h-12 max-w-[calc(100vw-2rem)] items-center justify-center gap-2 truncate rounded-xl border-2 border-primary bg-tech-text px-3 text-xs font-bold uppercase tracking-wider text-white shadow-hard transition-all hover:-translate-y-[2px] hover:shadow-hard-hover sm:px-4 dark:bg-black"
+      className="fixed z-50 inline-flex h-12 max-w-[calc(100vw-2rem)] items-center justify-center gap-2 truncate rounded-xl border-2 border-black bg-tech-bg px-3 text-xs font-bold uppercase tracking-wider text-app-text shadow-hard-sm transition-all hover:-translate-y-0.5 hover:shadow-hard sm:px-4"
       style={{
         bottom: "max(1.5rem, env(safe-area-inset-bottom, 0px))",
         insetInlineEnd: "max(1.5rem, env(safe-area-inset-right, 0px))",
@@ -504,7 +502,7 @@ export function WhatsAppFloatButton() {
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className="h-5 w-5 text-primary"
+        className="h-5 w-5 shrink-0 text-whatsapp"
         fill="currentColor"
       >
         <path d="M19.05 4.91A9.82 9.82 0 0 0 12.03 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.74.45 3.44 1.3 4.95L2 22l5.3-1.39a9.88 9.88 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.12-2.89-7zM12.04 20.1h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.15.83.84-3.07-.2-.31a8.15 8.15 0 0 1-1.26-4.33c0-4.52 3.68-8.2 8.21-8.2 2.19 0 4.24.85 5.79 2.4a8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.2-8.2 8.2zm4.5-6.15c-.25-.13-1.47-.73-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.98-.14.17-.29.19-.54.06-.25-.13-1.04-.38-1.98-1.22-.73-.65-1.22-1.46-1.37-1.71-.14-.25-.02-.39.11-.52.12-.12.25-.3.37-.45.12-.14.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.76-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.23.9 2.43 1.03 2.6.13.17 1.76 2.69 4.26 3.77.59.26 1.05.41 1.41.53.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.17.21-.58.21-1.07.15-1.17-.06-.1-.22-.16-.47-.29z" />

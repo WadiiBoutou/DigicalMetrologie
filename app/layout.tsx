@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { Alexandria, Cairo, JetBrains_Mono, Manrope } from "next/font/google";
 import { DigicalRootProviders } from "@/components/digical/DigicalRootProviders";
 import type { DigicalLanguage } from "@/components/digical/language";
+import Script from "next/script";
 import "./globals.css";
 
 const alexandria = Alexandria({
@@ -27,28 +28,109 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
 });
 
+const SITE_URL = "https://digicalmetrologie.com";
+
+const APP_NAME = "Digical Metrologie";
+const APP_DESCRIPTION =
+  "Expert en solutions de métrologie de précision pour l'agriculture et l'industrie. Vente, maintenance et calibration d'instruments de mesure.";
+
+const APP_KEYWORDS = [
+  "métrologie",
+  "étalonnage",
+  "calibration",
+  "instruments de mesure",
+  "agriculture",
+  "industrie",
+  "qualité",
+  "COFRAC",
+  "Maroc",
+  "Digical",
+] as const;
+
 export const metadata: Metadata = {
-  title: "Digical Metrologie",
-  description: "Instruments de metrologie pour agriculture et industrie",
+  metadataBase: new URL(SITE_URL),
+  applicationName: APP_NAME,
+  title: {
+    default: APP_NAME,
+    template: `%s | ${APP_NAME}`,
+  },
+  description: APP_DESCRIPTION,
+  keywords: [...APP_KEYWORDS],
+  alternates: {
+    canonical: SITE_URL,
+  },
+  authors: [{ name: "Digical Metrologie" }],
+  creator: "Digical Metrologie",
+  publisher: "Digical Metrologie",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   icons: {
     icon: [{ url: "/LOGO.png", type: "image/png" }],
     apple: "/LOGO.png",
   },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    alternateLocale: ["ar_MA"],
+    url: SITE_URL,
+    siteName: APP_NAME,
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: [
+      {
+        url: "/LOGO.png",
+        width: 800,
+        height: 400,
+        alt: APP_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: ["/LOGO.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
+/** Matches `:root --app-bg` in `app/globals.css` (Tailwind `bg-tech-bg`). */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
+  themeColor: "#f8f0da",
 };
 
-const themeInitScript = `(function(){try{var k="digical-theme";var s=localStorage.getItem(k);if(s==="dark")document.documentElement.classList.add("dark");else document.documentElement.classList.remove("dark");}catch(e){}})();`;
-
 const languageInitScript = `(function(){try{var k="digical-language";var s=localStorage.getItem(k);if(s==="AR"||s==="FR"){document.cookie=k+"="+s+"; path=/; max-age=31536000; SameSite=Lax";}var d=document.documentElement;if(s==="AR"){d.setAttribute("dir","rtl");d.setAttribute("lang","ar");}else{d.setAttribute("dir","ltr");d.setAttribute("lang","fr");}}catch(e){}})();`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: APP_NAME,
+  description: APP_DESCRIPTION,
+  url: SITE_URL,
+  telephone: "+212661406490",
+  logo: `${SITE_URL}/LOGO.png`,
+  image: `${SITE_URL}/LOGO.png`,
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "MA",
+  },
+};
 
 export default async function RootLayout({
   children,
@@ -61,16 +143,26 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="fr"
+      lang={initialLang === "AR" ? "ar" : "fr"}
+      dir={initialLang === "AR" ? "rtl" : "ltr"}
       suppressHydrationWarning
       className={`${alexandria.variable} ${manrope.variable} ${cairo.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <script dangerouslySetInnerHTML={{ __html: languageInitScript }} />
+        <script
+          id="language-init"
+          dangerouslySetInnerHTML={{ __html: languageInitScript }}
+        />
+        <Script
+          id="json-ld-digical"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="min-h-full bg-tech-bg font-sans text-tech-body">
-        <DigicalRootProviders initialLang={initialLang}>{children}</DigicalRootProviders>
+        <DigicalRootProviders initialLang={initialLang}>
+          {children}
+        </DigicalRootProviders>
       </body>
     </html>
   );

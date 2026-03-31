@@ -111,16 +111,16 @@ export function PrecisionTimeline() {
   return (
     <section
       ref={sectionRef}
-      className="brutal-on-light relative rounded-xl border-2 border-tech-border bg-white p-4 text-tech-body shadow-hard sm:p-8 md:p-12 dark:text-tech-brand"
+      className="relative rounded-xl border-2 border-tech-border bg-tech-bg p-4 text-tech-body shadow-hard sm:p-8 md:p-12"
     >
-      <div className="blueprint-bg pointer-events-none absolute inset-0 bg-white/10 dark:bg-white/[0.08]" />
+      <div className="blueprint-bg pointer-events-none absolute inset-0 opacity-[0.14]" />
 
       <div className="relative md:hidden">
         <div className="mb-6 grid grid-cols-5 gap-2">
           {steps.map((step) => (
             <div
               key={`mobile-${step.id}`}
-              className="rounded-xl border-2 border-tech-border bg-tech-bg px-2 py-2 text-center"
+              className="rounded-xl border-2 border-tech-border bg-tech-surface px-2 py-2 text-center"
             >
               <span className="font-mono text-[11px] font-black text-primary">
                 {step.id}
@@ -132,12 +132,12 @@ export function PrecisionTimeline() {
           {steps.map((step) => (
             <div
               key={step.id}
-              className="rounded-xl border-2 border-tech-border bg-white p-4 shadow-hard-sm dark:text-tech-brand"
+              className="rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm"
             >
-              <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text dark:text-tech-brand">
+              <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text">
                 {step.title}
               </p>
-              <p className="mt-2 text-sm font-medium text-tech-text/75 dark:text-tech-brand/85">
+              <p className="mt-2 text-sm font-medium text-tech-text/75">
                 {step.description}
               </p>
             </div>
@@ -162,11 +162,11 @@ export function PrecisionTimeline() {
               >
                 <div>
                   {!isRight && (
-                    <div className="rounded-xl border-2 border-tech-border bg-white p-5 shadow-hard-sm dark:text-tech-brand">
-                      <p className="font-display text-xl font-black uppercase tracking-tight text-tech-text dark:text-tech-brand">
+                    <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-5 shadow-hard-sm">
+                      <p className="font-display text-xl font-black uppercase tracking-tight text-tech-text">
                         {step.title}
                       </p>
-                      <p className="mt-2 text-sm font-medium text-tech-text/75 dark:text-tech-brand/85">
+                      <p className="mt-2 text-sm font-medium text-tech-text/75">
                         {step.description}
                       </p>
                     </div>
@@ -184,7 +184,7 @@ export function PrecisionTimeline() {
                       ref={(el) => {
                         shapeRefs.current[i] = el;
                       }}
-                      className="absolute inset-0 rounded-md border-2 border-tech-border bg-white shadow-hard-sm"
+                      className="absolute inset-0 rounded-md border-2 border-tech-border bg-tech-surface shadow-hard-sm"
                     />
 
                     <span className="relative z-10 font-mono text-sm font-black text-primary select-none">
@@ -195,11 +195,11 @@ export function PrecisionTimeline() {
 
                 <div>
                   {isRight && (
-                    <div className="rounded-xl border-2 border-tech-border bg-white p-5 shadow-hard-sm dark:text-tech-brand">
-                      <p className="font-display text-xl font-black uppercase tracking-tight text-tech-text dark:text-tech-brand">
+                    <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-5 shadow-hard-sm">
+                      <p className="font-display text-xl font-black uppercase tracking-tight text-tech-text">
                         {step.title}
                       </p>
-                      <p className="mt-2 text-sm font-medium text-tech-text/75 dark:text-tech-brand/85">
+                      <p className="mt-2 text-sm font-medium text-tech-text/75">
                         {step.description}
                       </p>
                     </div>
