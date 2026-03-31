@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { ArrowRight, CheckCircle2, ChevronDown, Minus, Send, ShoppingCart, Trash2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Minus, Send, ShoppingCart, Trash2 } from "lucide-react";
 import { onCatalogueImageError } from "@/lib/catalogue-image";
 import type { CartItem, Product } from "@/lib/types";
 import { AppShell } from "@/components/digical/AppShell";
@@ -23,10 +23,8 @@ function ContactContent({
   const { t } = useDigicalI18n();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
-    entreprise: "",
     contact: "",
     email: "",
-    secteur: "",
     notes: "",
   });
 
@@ -50,10 +48,8 @@ function ContactContent({
     const message =
       `*${t("contactMsgHeading")}*\n\n` +
       `*${t("contactMsgClient")}*\n` +
-      `• ${t("contactMsgCompany")} : ${formData.entreprise}\n` +
       `• ${t("contactMsgContact")} : ${formData.contact}\n` +
       `• ${t("contactMsgEmail")} : ${formData.email}\n` +
-      `• ${t("contactMsgSector")} : ${formData.secteur}\n` +
       `• ${t("contactMsgNotes")} : ${formData.notes || na}\n\n` +
       `*${t("contactMsgItems")}*\n${cartList}\n\n` +
       t("contactMsgClosing");
@@ -185,18 +181,6 @@ function ContactContent({
             <form id="contact-form" className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="flex flex-col">
-                   <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelCompany")}</label>
-                   <input 
-                     required 
-                     name="entreprise"
-                     type="text" 
-                     value={formData.entreprise}
-                     onChange={handleChange}
-                     placeholder={t("contactPhCompany")} 
-                     className="h-12 rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold placeholder:text-tech-muted/40 focus:border-primary focus:outline-none focus:ring-0" 
-                   />
-                </div>
-                <div className="flex flex-col">
                    <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelPerson")}</label>
                    <input 
                      required 
@@ -208,38 +192,20 @@ function ContactContent({
                      className="h-12 rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold placeholder:text-tech-muted/40 focus:border-primary focus:outline-none focus:ring-0" 
                    />
                 </div>
-              </div>
-              <div className="flex flex-col">
-                <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelEmail")}</label>
-                <input 
-                   required 
-                   name="email"
-                   type="email" 
-                   value={formData.email}
-                   onChange={handleChange}
-                   placeholder={t("contactPhEmail")} 
-                   className="h-12 w-full rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold placeholder:text-tech-muted/40 focus:border-primary focus:outline-none focus:ring-0" 
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelSector")}</label>
-                <div className="relative">
-                  <select 
-                    required 
-                    name="secteur"
-                    value={formData.secteur}
-                    onChange={handleChange}
-                    className="h-12 w-full appearance-none rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold focus:border-primary focus:outline-none focus:ring-0 bg-transparent"
-                  >
-                    <option value="">{t("contactSelectPlaceholder")}</option>
-                    <option value="Agricole">{t("contactSectorAgri")}</option>
-                    <option value="Industriel">{t("contactSectorInd")}</option>
-                    <option value="Laboratoire">{t("contactSectorLab")}</option>
-                    <option value="Autre">{t("contactSectorOther")}</option>
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute end-4 top-1/2 h-4 w-4 -translate-y-1/2 text-tech-muted" />
+                <div className="flex flex-col">
+                  <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelEmail")}</label>
+                  <input 
+                     required 
+                     name="email"
+                     type="email" 
+                     value={formData.email}
+                     onChange={handleChange}
+                     placeholder={t("contactPhEmail")} 
+                     className="h-12 w-full rounded-xl border-2 border-tech-border px-4 font-mono text-xs font-bold placeholder:text-tech-muted/40 focus:border-primary focus:outline-none focus:ring-0" 
+                  />
                 </div>
               </div>
+
               <div className="flex flex-col">
                 <label className="mb-1 font-mono text-[10px] font-bold uppercase text-tech-muted">{t("contactLabelNotes")}</label>
                 <textarea 
@@ -254,7 +220,7 @@ function ContactContent({
               <button 
                 disabled={cartItems.length === 0} 
                 type="submit" 
-                className="group flex h-14 w-full items-center justify-center gap-3 bg-primary font-styrene text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-hard disabled:opacity-50 disabled:grayscale disabled:shadow-none hover:-translate-y-1 hover:shadow-hard-hover transition-all active:translate-y-0 active:shadow-hard"
+                className="group brutal-shadow-black flex h-14 w-full items-center justify-center gap-3 rounded-xl border-2 border-black bg-primary font-styrene text-sm font-bold uppercase tracking-wider text-white shadow-control transition-all hover:-translate-y-1 disabled:opacity-50 disabled:grayscale disabled:shadow-none active:translate-y-0"
               >
                 {t("contactSubmit")}
                 <Send className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
