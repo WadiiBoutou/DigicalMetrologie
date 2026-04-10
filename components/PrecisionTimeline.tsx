@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
@@ -24,29 +24,27 @@ export function PrecisionTimeline() {
       { id: "04", title: t("tl4Title"), description: t("tl4Desc") },
       { id: "05", title: t("tl5Title"), description: t("tl5Desc") },
     ],
-    [lang],
+    [t],
   );
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const lineRef = useRef<HTMLDivElement | null>(null);
-
   const shapeRefs = useRef<Array<HTMLDivElement | null>>([]);
   const markerWrapRefs = useRef<Array<HTMLDivElement | null>>([]);
-
   const morphedRef = useRef<boolean[]>(steps.map(() => false));
 
   useEffect(() => {
     morphedRef.current = steps.map(() => false);
-  }, [steps]);
+  }, [lang, steps]);
 
   useEffect(() => {
     if (!sectionRef.current || !lineRef.current) return;
 
     const ctx = gsap.context(() => {
-      shapeRefs.current.forEach((el, i) => {
+      shapeRefs.current.forEach((el, index) => {
         if (!el) return;
-        const dir = i % 2 === 0 ? 45 : -45;
-        gsap.set(el, { rotate: dir });
+        const direction = index % 2 === 0 ? 45 : -45;
+        gsap.set(el, { rotate: direction });
       });
 
       const lineEl = lineRef.current!;
@@ -74,25 +72,24 @@ export function PrecisionTimeline() {
             onUpdate: (self) => {
               const progress = self.progress;
 
-              thresholds.forEach((threshold, i) => {
-                const shapeEl = shapeRefs.current[i];
+              thresholds.forEach((threshold, index) => {
+                const shapeEl = shapeRefs.current[index];
                 if (!shapeEl) return;
 
                 const shouldMorph = progress >= threshold;
-
-                if (shouldMorph && !morphedRef.current[i]) {
-                  morphedRef.current[i] = true;
+                if (shouldMorph && !morphedRef.current[index]) {
+                  morphedRef.current[index] = true;
                   gsap.to(shapeEl, {
                     rotate: 0,
                     duration: 1,
                     ease: "power2.out",
                     overwrite: true,
                   });
-                } else if (!shouldMorph && morphedRef.current[i]) {
-                  morphedRef.current[i] = false;
-                  const dir = i % 2 === 0 ? 45 : -45;
+                } else if (!shouldMorph && morphedRef.current[index]) {
+                  morphedRef.current[index] = false;
+                  const direction = index % 2 === 0 ? 45 : -45;
                   gsap.to(shapeEl, {
-                    rotate: dir,
+                    rotate: direction,
                     duration: 0.75,
                     ease: "power2.in",
                     overwrite: true,
@@ -109,69 +106,47 @@ export function PrecisionTimeline() {
   }, [lang]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative rounded-xl border-2 border-tech-border bg-tech-bg p-4 text-tech-body shadow-hard sm:p-8 md:p-12"
-    >
-      <div className="blueprint-bg pointer-events-none absolute inset-0 opacity-[0.14]" />
+    <section ref={sectionRef} className="relative bento-card overflow-hidden p-4 text-tech-body sm:p-8 md:p-12">
+      <div className="micro-dot-pattern pointer-events-none absolute inset-0 opacity-[0.05]" />
 
       <div className="relative">
         <div className="absolute right-10 top-0 h-full w-[2px] bg-tech-border/20 sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2" />
-        <div
-          ref={lineRef}
-          className="absolute right-10 top-0 h-full w-[2px] bg-primary sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2"
-        />
+        <div ref={lineRef} className="absolute right-10 top-0 h-full w-[2px] bg-primary sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2" />
 
         <div className="space-y-12 md:space-y-24">
-          {steps.map((step, i) => {
-            const isRight = i % 2 === 1;
+          {steps.map((step, index) => {
+            const isRight = index % 2 === 1;
             return (
-              <div
-                key={step.id}
-                className="grid grid-cols-[1fr_48px] items-center gap-4 md:grid-cols-[1fr_80px_1fr] md:gap-10"
-              >
-                {/* Left Card: Always visible on mobile, visible on desktop only if !isRight */}
+              <div key={step.id} className="grid grid-cols-[1fr_48px] items-center gap-4 md:grid-cols-[1fr_80px_1fr] md:gap-10">
                 <div className={isRight ? "md:invisible" : ""}>
-                  <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm md:p-6 lg:p-8">
-                    <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text md:text-xl">
-                      {step.title}
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-tech-text/75 md:text-base">
-                      {step.description}
-                    </p>
+                  <div className="rounded-xl border border-tech-border bg-white/86 p-4 shadow-tech-sm transition-[transform,box-shadow,border-color,background-color] hover:-translate-y-0.5 hover:border-primary/20 hover:bg-white md:p-6 lg:p-8">
+                    <p className="font-display text-lg font-medium uppercase tracking-tight text-tech-text md:text-xl">{step.title}</p>
+                    <p className="mt-2 text-sm font-normal text-tech-muted md:text-base">{step.description}</p>
                   </div>
                 </div>
 
-                {/* Marker Wrapper: Centered on desktop, on the right on mobile */}
                 <div className="relative z-10 flex justify-center">
                   <div
                     ref={(el) => {
-                      markerWrapRefs.current[i] = el;
+                      markerWrapRefs.current[index] = el;
                     }}
                     className="relative flex h-12 w-12 items-center justify-center md:h-16 md:w-16"
                   >
                     <div
                       ref={(el) => {
-                        shapeRefs.current[i] = el;
+                        shapeRefs.current[index] = el;
                       }}
-                      className="absolute inset-0 rounded-md border-2 border-tech-border bg-tech-surface shadow-hard-sm"
+                      className="absolute inset-0 rounded-lg border border-primary/20 bg-tech-surface shadow-tech-sm"
                     />
 
-                    <span className="relative z-10 font-mono text-sm font-black text-primary select-none md:text-base">
-                      {step.id}
-                    </span>
+                    <span className="relative z-10 select-none font-mono text-sm font-bold text-primary md:text-base">{step.id}</span>
                   </div>
                 </div>
 
-                {/* Right Card: Hidden on mobile, visible on desktop only if isRight */}
                 <div className={`hidden md:block ${!isRight ? "md:invisible" : ""}`}>
-                  <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm md:p-6 lg:p-8">
-                    <p className="font-display text-lg font-black uppercase tracking-tight text-tech-text md:text-xl">
-                      {step.title}
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-tech-text/75 md:text-base">
-                      {step.description}
-                    </p>
+                  <div className="rounded-xl border border-tech-border bg-white/86 p-4 shadow-tech-sm transition-[transform,box-shadow,border-color,background-color] hover:-translate-y-0.5 hover:border-primary/20 hover:bg-white md:p-6 lg:p-8">
+                    <p className="font-display text-lg font-medium uppercase tracking-tight text-tech-text md:text-xl">{step.title}</p>
+                    <p className="mt-2 text-sm font-normal text-tech-muted md:text-base">{step.description}</p>
                   </div>
                 </div>
               </div>
@@ -182,3 +157,4 @@ export function PrecisionTimeline() {
     </section>
   );
 }
+

@@ -9,7 +9,7 @@ import "./globals.css";
 const alexandria = Alexandria({
   subsets: ["latin"],
   variable: "--font-alexandria",
-  weight: ["400", "700", "900"],
+  weight: ["300", "400", "500", "700", "800"],
 });
 
 const manrope = Manrope({
@@ -112,7 +112,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#f8f0da",
+  themeColor: "#09111b",
 };
 
 const languageInitScript = `(function(){try{var k="digical-language";var s=localStorage.getItem(k);if(s==="AR"||s==="FR"){document.cookie=k+"="+s+"; path=/; max-age=31536000; SameSite=Lax";}var d=document.documentElement;if(s==="AR"){d.setAttribute("dir","rtl");d.setAttribute("lang","ar");}else{d.setAttribute("dir","ltr");d.setAttribute("lang","fr");}}catch(e){}})();`;

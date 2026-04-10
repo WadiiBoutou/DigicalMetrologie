@@ -19,7 +19,7 @@ export const digicalTranslations = {
   removeFromQuote: { FR: "Retirer du devis", AR: "إزالة من عرض السعر" },
   add: { FR: "Ajouter", AR: "إضافة" },
   remove: { FR: "Retirer", AR: "إزالة" },
-  clearAll: { FR: "Effacer tout", AR: "\u0645\u0633\u062d \u0627\u0644\u0643\u0644" },
+  clearAll: { FR: "Effacer tout", AR: "مسح الكل" },
   resolution: { FR: "Resolution", AR: "الدقة" },
   navSection: { FR: "Navigation", AR: "التنقل" },
   legalSection: { FR: "Legal", AR: "قانوني" },
@@ -103,18 +103,48 @@ export const digicalTranslations = {
   },
   catAriaGrid: { FR: "Vue grille", AR: "عرض شبكي" },
   catAriaList: { FR: "Vue liste", AR: "عرض قائمة" },
+  catQualityVerified: { FR: "Qualite verifiee", AR: "جودة مؤكدة" },
+  catTechnicalLabel: { FR: "Catalogue technique", AR: "كتالوج تقني" },
+  catSelectionGuided: { FR: "Selection guidee", AR: "اختيار موجه" },
+  catEmptySub: {
+    FR: "Ajustez les filtres ou relancez une recherche plus large pour rouvrir le catalogue.",
+    AR: "اضبط المرشحات أو ابدأ بحثاً أوسع لإعادة فتح الكتالوج.",
+  },
+  homeProcSeqTitle: { FR: "Sequence operationnelle", AR: "التسلسل التشغيلي" },
+  homeProcSeqDesc: {
+    FR: "Les etapes detaillees sont visualisees une seule fois dans le schema circulaire pour garder la lecture propre et immediate.",
+    AR: "يتم عرض الخطوات التفصيلية مرة واحدة فقط في المخطط الدائري للحفاظ على القراءة واضحة وفورية.",
+  },
+  homeProcCadence: { FR: "Cadence", AR: "الإيقاع" },
+  homeProcStepsCount: { FR: "4 etapes", AR: "4 خطوات" },
+  homeProcLivrable: { FR: "Livrable final", AR: "المنتج النهائي" },
+  homeProcReporting: { FR: "Reporting digital", AR: "تقرير رقمي" },
+  homePilotageTitle: { FR: "Pilotage sur mesure", AR: "توجيه حسب المقاس" },
+  homeParcTitle: { FR: "Parc", AR: "المعدات" },
+  homeParcDesc: { FR: "Selection instrument par criticite et usage.", AR: "اختيار الأدوات حسب الأهمية والاستخدام." },
+  homeTraceTitle: { FR: "Trace", AR: "الأثر" },
+  homeTraceDesc: { FR: "Historique, certificats et recommandations actionnables.", AR: "السجل، الشهادات والتوصيات المباشرة." },
+  homeTempoTitle: { FR: "Tempo", AR: "الوتيرة" },
+  homeTempoDesc: { FR: "Rythme adapte a la realite atelier, agro et laboratoire.", AR: "وتيرة تتناسب مع واقع الورشة، الزراعة والمختبر." },
+  homeProtocolTitle: { FR: "Protocoles lisibles et auditables", AR: "بروتوكولات واضحة وقابلة للتدقيق" },
+  homeProtocolDesc: {
+    FR: "Chaque page du systeme doit traduire la meme idee: rigueur technique, acces rapide aux decisions utiles, et absence d'effets visuels parasites",
+    AR: "يجب أن تعبر كل صفحة في النظام عن نفس الفكرة: الدقة التقنية، الوصول السريع للقرارات المفيدة، وغياب المؤثرات البصرية الزائدة.",
+  },
+  srvStructDoc: { FR: "Documents structurés et auditables", AR: "وثائق منظمة وقابلة للتدقيق" },
+  srvCritProtocol: { FR: "Protocoles adaptés à la criticité terrain", AR: "بروتوكولات متكيفة مع أهمية الميدان" },
+  srvFastDecisions: { FR: "Décisions techniques plus rapides et plus nettes", AR: "قرارات تقنية أسرع وأكثر وضوحاً" },
+  srvScopeTitle: { FR: "Engineer-ready scope", AR: "نطاق جاهز للمهندسين" },
   prodSpecsTitle: { FR: "Specifications Techniques", AR: "المواصفات التقنية" },
   prodAddToQuote: { FR: "Ajouter au devis", AR: "إضافة إلى العرض" },
   prodRemoveQuote: { FR: "Retirer du devis", AR: "إزالة من العرض" },
 
   homeHeroLine1: { FR: "Technologie", AR: "تقنية" },
-  /** Plain segment before the emphasized word (no lift / no accent color) */
   homeHeroLine2Prefix: { FR: "de ", AR: "" },
-  /** Emphasized segment: primary + brutalist shadow */
   homeHeroLine2Emphasis: { FR: "Precision", AR: "الدقة" },
   homeHeroLead: {
-    FR: "Expertise en metrologie pour les secteurs industriel et agricole. Solutions de mesure, reparation et etalonnage certifie.",
-    AR: "خبرة في المترولوجيا للقطاعين الصناعي والفلاحي. قياس وإصلاح ومعايرة معتمدة.",
+    FR: "Réparation, étalonnage et vente de matériels de précision pour les entreprises agricoles, afin de sécuriser vos mesures, fiabiliser vos équipements et accompagner vos opérations au quotidien.",
+    AR: "إصلاح ومعايرة وبيع المعدات لفائدة الشركات الفلاحية.",
   },
   homeHeroImgAlt: {
     FR: "Technicien en controle metrologique en environnement industriel",
@@ -151,7 +181,7 @@ export const digicalTranslations = {
   homeKpiL4: { FR: "Etalonnages realises par an", AR: "معايرات سنوياً" },
   homeProcTitle: { FR: "Processus precision 360", AR: "عملية الدقة 360" },
   homeProcLead: {
-    FR: "De la phase audit initiale a la remise des certificats, notre methode se base sur des etapes claires, mesurables et transparentes. Votre equipe sait exactement ou en est chaque instrument a chaque instant.",
+    FR: "De la phase audit initiale a la remise des certificats, notre methode se base on des etapes claires, mesurables et transparentes. Votre equipe sait exactement ou en est chaque instrument a chaque instant.",
     AR: "من التدقيق الأول إلى تسليم الشهادات، خطوات واضحة وقابلة للقياس. تعرف فرقتك مكان كل جهاز في كل لحظة.",
   },
   homeProcStep1: {
@@ -225,7 +255,7 @@ export const digicalTranslations = {
   },
   homeFaq3Q: { FR: "Comment suivez-vous les echeances ?", AR: "كيف تتابعون المواعيد؟" },
   homeFaq3A: {
-    FR: "Nous mettons en place un suivi periodique avec alertes pour anticiper la derive metrologique.",
+    FR: "Nous mettons en place un suivi periodique with alertes pour anticiper la derive metrologique.",
     AR: "متابعة دورية وتنبيهات لاستباق انحراف القياس.",
   },
   homeCtaBoxKicker: { FR: "Demarrage rapide", AR: "انطلاقة سريعة" },
@@ -375,7 +405,7 @@ export const digicalTranslations = {
   srvModulesTitle: { FR: "Des offres calibrables selon votre parc", AR: "عروض قابلة للضبط حسب مجموعتك" },
   srvModulesLead: {
     FR: "Choisissez un niveau d engagement adapte a votre maturite metrologique et vos contraintes.",
-    AR: "اختر مستوى التزام ملائماً لنضجك المترولوجي وقيودك.",
+    AR: "اختر مستوى التزاماً ملائماً لنضجك المترولوجي وقيودك.",
   },
   srvCycleTitle: { FR: "Cycle d intervention type", AR: "دورة تدخل نموذجية" },
   srvEnvTitle: { FR: "Secteurs et environnements", AR: "القطاعات والبيئات" },
@@ -399,7 +429,7 @@ export const digicalTranslations = {
 
   tl1Title: { FR: "Audit metrologique", AR: "التدقيق المترولوجي" },
   tl1Desc: {
-    FR: "Cartographie des instruments, criticite des points de mesure et niveau de risque qualite.",
+    FR: "Cartographie des instruments, criticite des points de mesure and niveau de risque qualite.",
     AR: "تعرّف الأجهزة، حساسية نقاط القياس ومخاطر الجودة.",
   },
   tl2Title: { FR: "Plan de fiabilisation", AR: "خطة التوثيق" },
@@ -417,9 +447,9 @@ export const digicalTranslations = {
     FR: "Remise des livrables, interpretation des resultats et feuille de route d amelioration continue.",
     AR: "تسليم المخرجات، تفسير النتائج وخارطة تحسين مستمر.",
   },
-  tl5Title: { FR: "Optimisation continue", AR: "تحسين مستمر" },
+  tl5Title: { FR: "Optimisation continue", AR: "التحسين المستمر" },
   tl5Desc: {
-    FR: "Boucle de retour terrain, recalage periodique des seuils et ajustement du plan metrologique.",
+    FR: "Boucle de retour terrain, recalage periodique des seuils and ajustement du plan metrologique.",
     AR: "ملاحظات ميدانية دورية، إعادة ضبط العتبات وتعديل الخطة المترولوجية.",
   },
 
@@ -438,7 +468,7 @@ export const digicalTranslations = {
     AR: "الإطار: الحساسية، قيود الإنتاج، الأولويات",
   },
   expMet2: { FR: "Execution: verification, reparation, etalonnage", AR: "التنفيذ: تحقق، إصلاح، معايرة" },
-  expMet3: { FR: "Validation: preuves, interpretation et decision", AR: "التحقق: أدلة، تفسير وقرار" },
+  expMet3: { FR: "Validation: preuves, interpretation and decision", AR: "التحقق: أدلة، تفسير وقرار" },
   expMet4: { FR: "Pilotage: plan de progression continue", AR: "التوجيه: خطة تحسين مستمر" },
   expSec1: { FR: "Agroalimentaire", AR: "أغذية" },
   expSec2: { FR: "Usinage", AR: "تشغيل معادن" },
@@ -452,7 +482,7 @@ export const digicalTranslations = {
   expKpi4L: { FR: "Satisfaction equipes terrain", AR: "رضا الفرق الميدانية" },
   expFaq1Q: { FR: "Intervention rapide possible ?", AR: "تدخل سريع ممكن؟" },
   expFaq1A: {
-    FR: "Oui, selon criticite et disponibilites, avec priorisation des postes bloquants.",
+    FR: "Oui, selon criticite et disponibilites, with priorisation des postes bloquants.",
     AR: "نعم، حسب الحساسية والإتاحة، بأولوية المواقع العائقة.",
   },
   expFaq2Q: { FR: "Compatibilite multi-marques ?", AR: "توافق متعدد العلامات؟" },
@@ -462,8 +492,8 @@ export const digicalTranslations = {
   },
   expFaq3Q: { FR: "Accompagnement audit qualite ?", AR: "مرافقة مراجعة الجودة؟" },
   expFaq3A: {
-    FR: "Oui, nous structurons les preuves et documents requis pour vos audits.",
-    AR: "نعم، ننظم الأدلة والوثائق المطلوبة لمراجعاتكم.",
+    FR: "Oui, nous structurons les preuves and documents requis pour vos audits.",
+    AR: "نعم، ننظم الأدلة والوثائق المطلوبة لمراجعتكم.",
   },
 
   srvRepT1: { FR: "Diagnostic", AR: "تشخيص" },
@@ -477,7 +507,7 @@ export const digicalTranslations = {
   srvRepD3: { FR: "Validation du fonctionnement nominal.", AR: "التحقق من التشغيل الاسمي." },
   srvRepT4: { FR: "Remise & Rapport", AR: "التسليم والتقرير" },
   srvRepD4: {
-    FR: "Compte rendu, recommandations et plan de prevention.",
+    FR: "Compte rendu, recommandations and plan de prevention.",
     AR: "محضر، توصيات وخطة وقاية.",
   },
   srvLabK1: { FR: "Standards Nationaux", AR: "معايير وطنية" },
@@ -517,7 +547,7 @@ export const digicalTranslations = {
     AR: "تحقق نهائي وتسليم وثائق المطابقة",
   },
   srvCycle5: {
-    FR: "Suivi post intervention et plan de prevention derive",
+    FR: "Suivi post intervention and plan de prevention derive",
     AR: "متابعة بعد التدخل وخطة وقاية الانحراف",
   },
   srvEnv1: { FR: "Atelier usinage", AR: "ورشة تشغيل" },
@@ -551,12 +581,12 @@ export const digicalTranslations = {
   },
   srvFaq1Q: { FR: "Faites-vous des interventions urgentes ?", AR: "هل تنفذون تدخلات عاجلة؟" },
   srvFaq1A: {
-    FR: "Oui, selon disponibilite et criticite de la ligne, avec priorite aux postes bloquants.",
+    FR: "Oui, selon disponibilite and criticite de la ligne, with priorite aux postes bloquants.",
     AR: "نعم، حسب الإتاحة وحساسية الخط، بأولوية المواقع العائقة.",
   },
   srvFaq2Q: { FR: "Peut-on demarrer par une partie du parc ?", AR: "هل يمكن البدء بجزء من المجموعة؟" },
   srvFaq2A: {
-    FR: "Oui, nous pouvons lancer un pilote sur les instruments a plus forte valeur qualite.",
+    FR: "Oui, nous pouvons lancer un pilote on les instruments a plus forte valeur qualite.",
     AR: "نعم، يمكن إطلاق تجربة على الأجهزة ذات قيمة الجودة الأعلى.",
   },
   srvFaq3Q: { FR: "Les rapports sont-ils auditables ?", AR: "هل التقارير قابلة للمراجعة؟" },

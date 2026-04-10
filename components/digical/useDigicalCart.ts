@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CartItem, Product } from "@/lib/types";
@@ -10,15 +10,17 @@ export function useDigicalCart() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem(CART_KEY);
-    if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Failed to parse cart items", error);
+    queueMicrotask(() => {
+      const savedCart = localStorage.getItem(CART_KEY);
+      if (savedCart) {
+        try {
+          setCartItems(JSON.parse(savedCart));
+        } catch (error) {
+          console.error("Failed to parse cart items", error);
+        }
       }
-    }
-    setIsLoaded(true);
+      setIsLoaded(true);
+    });
   }, []);
 
   useEffect(() => {
@@ -75,3 +77,4 @@ export function useDigicalCart() {
     [cartItems, isLoaded, cartCount, setCartLineQuantity, toggleCartItem, clearCart]
   );
 }
+

@@ -1,15 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { AlertCircle, LayoutGrid, List, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  SlidersHorizontal,
+  Trash2,
+} from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PRODUCTS } from "@/lib/products";
 import type { CartItem, Product } from "@/lib/types";
 import { AppShell } from "@/components/digical/AppShell";
-import { cn, ProductCard, ProductListRow } from "@/components/digical/shared";
+import { cn, ProductCard } from "@/components/digical/shared";
 import { useDigicalI18n } from "@/components/digical/language";
 import { useDigicalCart } from "@/components/digical/useDigicalCart";
+
+function asBool(value: string | null) {
+  return value === "1" || value === "true";
+}
 
 function CatalogContent({
   onSetLineQuantity,
@@ -20,406 +32,412 @@ function CatalogContent({
   cartItems: CartItem[];
   onClearCart: () => void;
 }) {
-  const [sector, setSector] = useState<"tous" | "industriel" | "agricole">("tous");
-  const [viewType, setViewType] = useState<"grid" | "list">("grid");
-  const [sortBy, setSortBy] = useState<"reference" | "name" | "precision">("reference");
-  const [showOnlyCertified, setShowOnlyCertified] = useState(false);
-  const [showHighPrecision, setShowHighPrecision] = useState(false);
-  const [certISO, setCertISO] = useState(false);
-  const [certCOFRAC, setCertCOFRAC] = useState(false);
-  const [resolutionUnit, setResolutionUnit] = useState<string>("all");
-  const [resolutionMax, setResolutionMax] = useState<number>(1);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const { t } = useDigicalI18n();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const sector = (searchParams.get("sector") as "tous" | "industriel" | "agricole" | null) ?? "tous";
+  const sortBy = (searchParams.get("sort") as "reference" | "name" | "precision" | null) ?? "reference";
+  const showOnlyCertified = asBool(searchParams.get("certified"));
+  const showHighPrecision = asBool(searchParams.get("precision"));
+  const certISO = asBool(searchParams.get("iso"));
+  const resolutionUnit = searchParams.get("unit") ?? "all";
+  const search = searchParams.get("search") ?? "";
+  const pageParam = Number(searchParams.get("page") ?? "1");
+  const requestedResolutionMax = Number(searchParams.get("max") ?? "0");
   const perPage = 9;
-  const { t, isArabic } = useDigicalI18n();
-  const sectorActiveShadow = isArabic ? "[box-shadow:-2px_2px_0px_var(--app-shadow)]" : "[box-shadow:2px_2px_0px_var(--app-shadow)]";
+
+  const [searchDraft, setSearchDraft] = useState(search);
+
+  useEffect(() => {
+    setSearchDraft(search);
+  }, [search]);
+
+  const updateParams = useCallback((updates: Record<string, string | number | boolean | null>, resetPage = true) => {
+    const next = new URLSearchParams(searchParams.toString());
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "" || value === false || value === "all") {
+        next.delete(key);
+      } else if (value === true) {
+        next.set(key, "1");
+      } else {
+        next.set(key, String(value));
+      }
+    });
+
+    if (resetPage) {
+      next.delete("page");
+    }
+
+    const nextQuery = next.toString();
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+  }, [pathname, router, searchParams]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      if (searchDraft !== search) {
+        updateParams({ search: searchDraft.trim() || null }, true);
+      }
+    }, 220);
+    return () => window.clearTimeout(timeout);
+  }, [searchDraft, search, updateParams]);
 
   const sectorContent = {
     tous: { heading: t("catHeadingTous"), intro: t("catIntroTous") },
     industriel: { heading: t("catHeadingIndustriel"), intro: t("catIntroIndustriel") },
     agricole: { heading: t("catHeadingAgricole"), intro: t("catIntroAgricole") },
-  };
+  } as const;
 
-  const filteredProducts = PRODUCTS.filter((p) => {
-    if (sector === "tous") return true;
-    return !p.category || p.category.toLowerCase().includes(sector);
-  });
-  const unitValues = filteredProducts.reduce<Record<string, number[]>>((acc, p) => {
-    const raw = p.resolution || p.lecture || "";
-    const match = raw.match(/([\d.]+)\s*([^\d\s].*)$/);
-    if (!match) return acc;
-    const value = Number(match[1]);
-    const unit = match[2].trim().toLowerCase();
-    if (!Number.isFinite(value)) return acc;
-    if (!acc[unit]) acc[unit] = [];
-    acc[unit].push(value);
-    return acc;
-  }, {});
-  const availableUnits = Object.keys(unitValues);
-  const selectedUnitValues =
-    resolutionUnit !== "all" && unitValues[resolutionUnit] ? unitValues[resolutionUnit] : [];
-  const unitMin =
-    selectedUnitValues.length > 0 ? Math.min(...selectedUnitValues) : 0;
-  const unitMax =
-    selectedUnitValues.length > 0 ? Math.max(...selectedUnitValues) : 1;
-  const searchedProducts = filteredProducts.filter((p) => {
-    const q = search.trim().toLowerCase();
-    if (!q) return true;
-    const fr = (p.description_fr || p.description || "").toLowerCase();
-    const ar = (p.description_ar || "").toLowerCase();
-    return (
-      p.name.toLowerCase().includes(q) ||
-      p.ref.toLowerCase().includes(q) ||
-      fr.includes(q) ||
-      ar.includes(q)
-    );
-  });
+  const sectorProducts = useMemo(() => {
+    return PRODUCTS.filter((product) => {
+      if (sector === "tous") return true;
+      return product.category?.toLowerCase().includes(sector);
+    });
+  }, [sector]);
 
-  const advancedFilteredProducts = searchedProducts.filter((p) => {
-    if (showOnlyCertified && !(p.tags?.includes("COFRAC") || p.tags?.includes("IP65"))) return false;
-    if (showHighPrecision && !(p.resolution?.includes("0.001") || p.maxError?.includes("2"))) return false;
-    if (certISO && !((p.tags || []).includes("ISO 9001"))) return false;
-    if (certCOFRAC && !((p.tags || []).includes("COFRAC"))) return false;
-    if (resolutionUnit !== "all") {
-      const raw = p.resolution || p.lecture || "";
+  const unitValues = useMemo(() => {
+    return sectorProducts.reduce<Record<string, number[]>>((acc, product) => {
+      const raw = product.resolution || product.lecture || "";
       const match = raw.match(/([\d.]+)\s*([^\d\s].*)$/);
-      if (!match) return false;
+      if (!match) return acc;
       const value = Number(match[1]);
       const unit = match[2].trim().toLowerCase();
-      if (unit !== resolutionUnit) return false;
-      if (value > resolutionMax) return false;
-    }
-    return true;
-  });
-  const sortedProducts = [...advancedFilteredProducts].sort((a, b) => {
-    if (sortBy === "name") return a.name.localeCompare(b.name);
-    if (sortBy === "precision") {
-      const ap = a.resolution || a.lecture || "9.99";
-      const bp = b.resolution || b.lecture || "9.99";
-      return ap.localeCompare(bp);
-    }
-    return a.ref.localeCompare(b.ref);
-  });
-  const totalPages = Math.max(1, Math.ceil(advancedFilteredProducts.length / perPage));
-  const currentPage = Math.min(page, totalPages);
-  const pagedProducts = sortedProducts.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
-  );
+      if (!Number.isFinite(value)) return acc;
+      acc[unit] = acc[unit] ? [...acc[unit], value] : [value];
+      return acc;
+    }, {});
+  }, [sectorProducts]);
+
+  const availableUnits = Object.keys(unitValues).sort();
+  const selectedUnitValues = resolutionUnit !== "all" && unitValues[resolutionUnit] ? unitValues[resolutionUnit] : [];
+  const unitMin = selectedUnitValues.length > 0 ? Math.min(...selectedUnitValues) : 0;
+  const unitMax = selectedUnitValues.length > 0 ? Math.max(...selectedUnitValues) : 1;
+  const effectiveResolutionMax = resolutionUnit === "all" ? 0 : Math.min(Math.max(requestedResolutionMax || unitMax, unitMin), unitMax);
+
+  const filteredProducts = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return sectorProducts
+      .filter((product) => {
+        if (!query) return true;
+        const fr = (product.description_fr || product.description || "").toLowerCase();
+        const ar = (product.description_ar || "").toLowerCase();
+        return (
+          product.name.toLowerCase().includes(query) ||
+          product.ref.toLowerCase().includes(query) ||
+          fr.includes(query) ||
+          ar.includes(query)
+        );
+      })
+      .filter((product) => {
+        if (showOnlyCertified && !((product.tags || []).some((tag) => tag.includes("COFRAC") || tag.includes("IP")))) {
+          return false;
+        }
+        if (showHighPrecision && !((product.resolution || product.lecture || "").includes("0.001") || (product.maxError || "").includes("2"))) {
+          return false;
+        }
+        if (certISO && !(product.tags || []).includes("Qualite verifiee")) return false;
+        if (resolutionUnit !== "all") {
+          const raw = product.resolution || product.lecture || "";
+          const match = raw.match(/([\d.]+)\s*([^\d\s].*)$/);
+          if (!match) return false;
+          const value = Number(match[1]);
+          const unit = match[2].trim().toLowerCase();
+          if (unit !== resolutionUnit) return false;
+          if (value > effectiveResolutionMax) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortBy === "name") return a.name.localeCompare(b.name);
+        if (sortBy === "precision") return (a.resolution || a.lecture || "9.99").localeCompare(b.resolution || b.lecture || "9.99");
+        return a.ref.localeCompare(b.ref);
+      });
+  }, [
+    certISO,
+    effectiveResolutionMax,
+    resolutionUnit,
+    search,
+    sectorProducts,
+    showHighPrecision,
+    showOnlyCertified,
+    sortBy,
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / perPage));
+  const currentPage = Number.isFinite(pageParam) ? Math.min(Math.max(pageParam, 1), totalPages) : 1;
+  const pagedProducts = filteredProducts.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+  const supportStats = [
+    { label: "Refs", value: String(filteredProducts.length).padStart(2, "0") },
+    { label: "ISO", value: certISO ? "ON" : "STBY" },
+  ] as const;
 
   return (
-    <div
-      className={cn(
-        "mx-auto flex max-w-7xl flex-col items-start md:flex-row",
-        isArabic && "md:flex-row-reverse",
-      )}
-    >
-      <aside className="flex w-full shrink-0 flex-col gap-8 border-b border-tech-border bg-tech-bg/50 p-4 sm:gap-10 sm:p-6 md:sticky md:top-[73px] md:min-h-[calc(100vh-73px)] md:w-[280px] md:border-b-0 md:border-e md:p-8">
-        <div>
-          <h3 className="mb-6 flex items-center gap-2 border-b border-tech-border pb-2 font-display text-sm font-black uppercase tracking-widest text-primary">
-            <LayoutGrid className="h-4 w-4" />
-            {t("catSector")}
-          </h3>
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={() => {
-                setSector("tous");
-                setPage(1);
-              }}
-              className={cn(
-                "flex h-10 items-center rounded-xl border-2 border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
-                sector === "tous"
-                  ? cn("bg-primary text-primary-foreground", sectorActiveShadow)
-                  : "bg-tech-surface hover:bg-tech-bg",
-              )}
-            >
-              {t("catSectorAll")}
-            </button>
-            <button
-              onClick={() => {
-                setSector("industriel");
-                setPage(1);
-              }}
-              className={cn(
-                "flex h-10 items-center rounded-xl border-2 border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
-                sector === "industriel"
-                  ? cn("brutal-on-dark bg-black text-white", sectorActiveShadow)
-                  : "bg-tech-surface hover:bg-tech-bg",
-              )}
-            >
-              {t("catSectorIndustrial")}
-            </button>
-            <button
-              onClick={() => {
-                setSector("agricole");
-                setPage(1);
-              }}
-              className={cn(
-                "flex h-10 items-center rounded-xl border-2 border-tech-border px-4 font-mono text-[10px] font-bold uppercase transition-all",
-                sector === "agricole"
-                  ? cn(
-                      "brutal-surface-invert border-tech-muted bg-tech-text text-white",
-                      sectorActiveShadow,
-                    )
-                  : "bg-tech-surface hover:bg-tech-bg",
-              )}
-            >
-              {t("catSectorFarm")}
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <h3 className="mb-4 border-b border-tech-border pb-2 font-display text-sm font-black uppercase tracking-widest text-primary">
-            {t("catFilters")}
-          </h3>
-          <div className="space-y-3">
-            <label className="flex items-center gap-2 text-xs font-bold uppercase">
-              <input type="checkbox" checked={showOnlyCertified} onChange={(e) => setShowOnlyCertified(e.target.checked)} />
-              {t("catCertifiedOnly")}
-            </label>
-            <label className="flex items-center gap-2 text-xs font-bold uppercase">
-              <input type="checkbox" checked={showHighPrecision} onChange={(e) => setShowHighPrecision(e.target.checked)} />
-              {t("catHighPrecision")}
-            </label>
-            <div className="pt-2">
-              <p className="font-mono text-[10px] font-bold uppercase text-tech-muted">{t("catCertifications")}</p>
-              <label className="mt-2 flex items-center gap-2 text-xs font-bold uppercase">
-                <input type="checkbox" checked={certISO} onChange={(e) => setCertISO(e.target.checked)} />
-                ISO 9001
-              </label>
-              <label className="mt-2 flex items-center gap-2 text-xs font-bold uppercase">
-                <input type="checkbox" checked={certCOFRAC} onChange={(e) => setCertCOFRAC(e.target.checked)} />
-                COFRAC
-              </label>
+    <div className="px-4 py-6 md:px-8 md:py-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="paper-panel overflow-hidden">
+          <div className="grid gap-6 border-b border-tech-border/70 px-5 py-6 md:px-8 md:py-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+            <div>
+              <span className="section-eyebrow">{t("catTechnicalLabel")}</span>
+              <h1 className="section-title mt-4 text-5xl md:text-6xl">{sectorContent[sector].heading}</h1>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-tech-body md:text-base">{sectorContent[sector].intro}</p>
             </div>
-            <div className="pt-2">
-              <p className="font-mono text-[10px] font-bold uppercase text-tech-muted">{t("catResolutionUnit")}</p>
-              <select
-                value={resolutionUnit}
-                onChange={(e) => {
-                  const unit = e.target.value;
-                  setResolutionUnit(unit);
-                  if (unit === "all") {
-                    setResolutionMax(1);
-                  } else {
-                    const vals = unitValues[unit] || [1];
-                    setResolutionMax(Math.max(...vals));
-                  }
-                }}
-                className="mt-2 h-10 w-full rounded-xl border-2 border-tech-border bg-tech-surface px-3 font-mono text-[10px] font-bold uppercase focus:border-primary focus:ring-0"
-              >
-                <option value="all">{t("catAllUnits")}</option>
-                {availableUnits.map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                ))}
-              </select>
-              {resolutionUnit !== "all" && (
-                <div className="mt-3">
-                  <input
-                    type="range"
-                    min={unitMin}
-                    max={unitMax}
-                    step={(unitMax - unitMin) / 100 || 0.001}
-                    value={Math.max(unitMin, Math.min(resolutionMax, unitMax))}
-                    onChange={(e) => setResolutionMax(Number(e.target.value))}
-                    className="w-full accent-primary"
-                  />
-                  <p className="font-mono text-[10px] font-bold uppercase text-primary">
-                    max {resolutionMax.toFixed(3)} {resolutionUnit}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        <div className="hidden flex-col gap-6 md:flex">
-          <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-6 shadow-hard-sm">
-            <h4 className="mb-3 font-display text-[11px] font-black uppercase tracking-tight">{t("catSupportTitle")}</h4>
-            <p className="text-[10px] leading-relaxed text-tech-muted">{t("catSupportBody")}</p>
-            <Link href="/contact" className="mt-4 inline-block text-[10px] font-black uppercase text-primary underline underline-offset-4">
-              {t("catExpertLink")}
-            </Link>
-          </div>
-        </div>
-      </aside>
-      
-      <section className="flex-1 p-4 sm:p-6 md:p-10 lg:p-16">
-        <div className="mb-10 flex flex-col items-start justify-between gap-6 border-b border-tech-border pb-10 md:flex-row md:items-end">
-          <div className="min-w-0">
-            <span className="font-mono text-xs font-bold uppercase text-primary">{t("catLabel")}</span>
-            <h1 className="mt-1 font-display text-3xl font-black uppercase tracking-tight sm:text-4xl md:text-5xl">{sectorContent[sector].heading}</h1>
-            <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-tech-text/75">
-              {sectorContent[sector].intro}
-            </p>
-          </div>
-          <p className="max-w-xs font-sans text-xs font-semibold uppercase leading-relaxed text-tech-muted">
-            {t("catDisplayed")} {advancedFilteredProducts.length} {t("catRefCount")}
-          </p>
-        </div>
-
-        <div className="mb-10 rounded-xl border-2 border-tech-border bg-tech-surface p-4 shadow-hard-sm">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("catSearchPlaceholder")}
-              className="h-11 w-full rounded-xl border-2 border-tech-border px-4 font-mono text-xs uppercase focus:border-primary focus:ring-0 md:max-w-md"
-            />
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 md:flex-initial md:flex-nowrap">
-              <div className="flex shrink-0 overflow-hidden rounded-xl border-2 border-tech-border bg-tech-bg shadow-hard-sm">
-                <button
-                  onClick={() => setViewType("grid")}
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center",
-                    viewType === "grid"
-                      ? "brutal-surface-invert bg-tech-text text-white"
-                      : "bg-tech-surface text-tech-text"
-                  )}
-                  aria-label={t("catAriaGrid")}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewType("list")}
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center border-s border-tech-border",
-                    viewType === "list"
-                      ? "brutal-surface-invert bg-tech-text text-white"
-                      : "bg-tech-surface text-tech-text"
-                  )}
-                  aria-label={t("catAriaList")}
-                >
-                  <List className="h-4 w-4" />
-                </button>
+            <div className="grid gap-3 sm:grid-cols-[1fr_auto] lg:grid-cols-1">
+              <label className="relative block">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-tech-muted" />
+                <input
+                  value={searchDraft}
+                  onChange={(event) => setSearchDraft(event.target.value)}
+                  name="catalog-search"
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder={`${t("catSearchPlaceholder")}…`}
+                  className="field-shell w-full pl-11 pr-4"
+                />
+              </label>
+              <div className="flex flex-wrap gap-2 lg:justify-end">
+                <span className="status-pill">{filteredProducts.length} {t("catRefCount")}</span>
+                <span className="status-pill">FR / AR</span>
               </div>
-              <button
-                type="button"
-                onClick={onClearCart}
-                disabled={cartItems.length === 0}
-                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border-2 border-tech-border bg-tech-surface px-3 font-styrene text-[11px] font-bold uppercase tracking-wider text-tech-text shadow-hard-sm transition-all hover:-translate-y-[2px] hover:shadow-hard disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-hard-sm"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                {t("clearAll")}
-              </button>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "reference" | "name" | "precision")}
-                className="h-10 min-w-0 flex-1 rounded-xl border-2 border-tech-border bg-tech-surface px-3 font-mono text-[11px] font-bold uppercase shadow-hard-sm focus:border-primary focus:ring-0 md:max-w-[280px] md:flex-initial"
-              >
-                <option value="reference">{t("catSortRef")}</option>
-                <option value="name">{t("catSortName")}</option>
-                <option value="precision">{t("catSortPrecision")}</option>
-              </select>
+            </div>
+          </div>
+
+          <div className="grid gap-0 lg:grid-cols-[320px_minmax(0,1fr)]">
+            <aside className="border-b border-tech-border/70 bg-[rgba(255,253,249,0.66)] p-5 lg:border-b-0 lg:border-e lg:p-6">
+              <div className="space-y-6 lg:sticky lg:top-28">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="h-4 w-4 text-primary" />
+                    <h2 className="font-display text-sm font-bold uppercase tracking-[0.16em] text-tech-text">{t("catSector")}</h2>
+                  </div>
+                  <div className="mt-4 space-y-2">
+                    {[
+                      { key: "tous", label: t("catSectorAll") },
+                      { key: "industriel", label: t("catSectorIndustrial") },
+                      { key: "agricole", label: t("catSectorFarm") },
+                    ].map((option) => (
+                      <button
+                        key={option.key}
+                        type="button"
+                        onClick={() => updateParams({ sector: option.key }, true)}
+                        className={cn(
+                          "flex min-h-11 w-full items-center justify-between rounded-[1rem] border px-4 py-3 text-left font-mono text-[11px] font-bold uppercase tracking-[0.16em]",
+                          sector === option.key
+                            ? "border-primary bg-primary text-white"
+                            : "border-tech-border bg-white text-tech-text hover:border-primary/40",
+                        )}
+                      >
+                        <span>{option.label}</span>
+                        <span className="text-[10px]">0{option.key === "tous" ? 1 : option.key === "industriel" ? 2 : 3}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[1.2rem] border border-tech-border bg-white/80 p-4 shadow-tech-sm">
+                  <h3 className="font-display text-sm font-bold uppercase tracking-[0.16em] text-tech-text">{t("catFilters")}</h3>
+                  <div className="mt-4 space-y-3">
+                    <label className="flex min-h-11 items-center gap-3 rounded-[0.9rem] border border-tech-border bg-tech-bg/40 px-3 text-xs font-bold uppercase tracking-[0.12em] text-tech-text">
+                      <input type="checkbox" checked={showOnlyCertified} onChange={(event) => updateParams({ certified: event.target.checked }, true)} />
+                      {t("catCertifiedOnly")}
+                    </label>
+                    <label className="flex min-h-11 items-center gap-3 rounded-[0.9rem] border border-tech-border bg-tech-bg/40 px-3 text-xs font-bold uppercase tracking-[0.12em] text-tech-text">
+                      <input type="checkbox" checked={showHighPrecision} onChange={(event) => updateParams({ precision: event.target.checked }, true)} />
+                      {t("catHighPrecision")}
+                    </label>
+                    <label className="flex min-h-11 items-center gap-3 rounded-[0.9rem] border border-tech-border bg-tech-bg/40 px-3 text-xs font-bold uppercase tracking-[0.12em] text-tech-text">
+                      <input type="checkbox" checked={certISO} onChange={(event) => updateParams({ iso: event.target.checked }, true)} />
+                      {t("catQualityVerified")}
+                    </label>
+                  </div>
+
+                  <div className="mt-5 border-t border-tech-border/70 pt-4">
+                    <label className="surface-caption">{t("catResolutionUnit")}</label>
+                    <select
+                      value={resolutionUnit}
+                      onChange={(event) => {
+                        const unit = event.target.value;
+                        const values = unitValues[unit] || [];
+                        updateParams({ unit, max: values.length ? Math.max(...values) : null }, true);
+                      }}
+                      className="field-shell mt-2 w-full pr-10"
+                    >
+                      <option value="all">{t("catAllUnits")}</option>
+                      {availableUnits.map((unit) => (
+                        <option key={unit} value={unit}>
+                          {unit}
+                        </option>
+                      ))}
+                    </select>
+
+                    {resolutionUnit !== "all" && selectedUnitValues.length > 0 ? (
+                      <div className="mt-4 rounded-[0.9rem] border border-tech-border bg-tech-bg/40 px-3 py-3">
+                        <input
+                          type="range"
+                          min={unitMin}
+                          max={unitMax}
+                          step={(unitMax - unitMin) / 100 || 0.001}
+                          value={effectiveResolutionMax}
+                          onChange={(event) => updateParams({ max: Number(event.target.value) }, true)}
+                          className="w-full accent-primary"
+                        />
+                        <p className="mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-primary">
+                          max {effectiveResolutionMax.toFixed(3)} {resolutionUnit}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="blueprint-panel px-5 py-6">
+                  <p className="dark-caption">{t("catSupportTitle")}</p>
+                  <p className="mt-3 text-sm leading-7 text-white/72">{t("catSupportBody")}</p>
+                  <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
+                    {supportStats.map((item) => (
+                      <div key={item.label} className="min-w-0 rounded-[1rem] border border-white/10 bg-white/5 px-2 py-3 text-center sm:px-3">
+                        <p className="overflow-hidden text-ellipsis font-display text-[0.95rem] font-bold uppercase tracking-[-0.035em] text-white sm:text-base md:text-lg">{item.value}</p>
+                        <p className="mt-1 font-mono text-[8px] font-bold uppercase tracking-[0.1em] text-white/52 sm:text-[9px] sm:tracking-[0.12em]">{item.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <Link href="/contact" className="btn-machined mt-5 w-full justify-center px-4 text-[10px] leading-tight sm:text-[11px]">
+                    {t("catExpertLink")}
+                  </Link>
+                </div>
+              </div>
+            </aside>
+
+            <section className="p-5 md:p-6 lg:p-7">
+              <div className="flex flex-col gap-4 border-b border-tech-border/70 pb-5 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p className="surface-caption">{t("catLabel")}</p>
+                  <h2 className="mt-2 font-display text-3xl font-bold uppercase tracking-[-0.05em] text-tech-text md:text-4xl">
+                    {sectorContent[sector].heading}
+                  </h2>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={onClearCart}
+                    disabled={cartItems.length === 0}
+                    className="cta-ghost px-4 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    {t("clearAll")}
+                  </button>
+                  <select
+                    value={sortBy}
+                    onChange={(event) => updateParams({ sort: event.target.value }, true)}
+                    className="field-shell min-w-[14rem] pr-10"
+                  >
+                    <option value="reference">{t("catSortRef")}</option>
+                    <option value="name">{t("catSortName")}</option>
+                    <option value="precision">{t("catSortPrecision")}</option>
+                  </select>
+                </div>
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${sector}-${sortBy}-${currentPage}-${filteredProducts.length}`}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+                >
+                  {pagedProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      lineQuantity={cartItems.find((item) => item.product.id === product.id)?.quantity ?? 0}
+                      onSetLineQuantity={onSetLineQuantity}
+                    />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+
+              {filteredProducts.length === 0 ? (
+                <div className="mt-6 flex min-h-72 flex-col items-center justify-center rounded-[1.25rem] border border-dashed border-tech-border bg-white/70 px-5 text-center text-tech-muted">
+                  <AlertCircle className="mb-3 h-10 w-10 opacity-50" />
+                  <p className="font-display text-xl font-bold uppercase tracking-[-0.04em] text-tech-text">{t("catEmpty")}</p>
+                  <p className="mt-2 max-w-md text-sm leading-7">{t("catEmptySub")}</p>
+                </div>
+              ) : null}
+
+              {filteredProducts.length > 0 ? (
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2 border-t border-tech-border/70 pt-6">
+                  <button
+                    type="button"
+                    onClick={() => updateParams({ page: Math.max(1, currentPage - 1) }, false)}
+                    disabled={currentPage === 1}
+                    className="cta-ghost px-4 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    {t("catPrev")}
+                  </button>
+                  {Array.from({ length: totalPages }).map((_, index) => {
+                    const page = index + 1;
+                    return (
+                      <button
+                        key={page}
+                        type="button"
+                        onClick={() => updateParams({ page }, false)}
+                        className={cn(
+                          "flex h-11 w-11 items-center justify-center rounded-full border font-mono text-xs font-bold tabular-nums",
+                          currentPage === page
+                            ? "border-primary bg-primary text-white"
+                            : "border-tech-border bg-white text-tech-text hover:border-primary/40",
+                        )}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                  <button
+                    type="button"
+                    onClick={() => updateParams({ page: Math.min(totalPages, currentPage + 1) }, false)}
+                    disabled={currentPage === totalPages}
+                    className="cta-ghost px-4 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    {t("catNext")}
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : null}
+            </section>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-5 lg:grid-cols-2">
+          <div className="blueprint-panel px-6 py-6 md:px-7 md:py-7">
+            <p className="section-eyebrow text-white before:bg-white/40">{t("catWhyTitle")}</p>
+            <div className="mt-5 space-y-4">
+              {[t("catWhy1"), t("catWhy2"), t("catWhy3")].map((line) => (
+                <div key={line} className="rounded-[1rem] border border-white/10 bg-white/5 px-4 py-4 text-sm leading-7 text-white/72">
+                  {line}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="paper-panel p-6 md:p-7">
+            <span className="section-eyebrow">{t("catSelectionGuided")}</span>
+            <h3 className="section-title mt-4 text-4xl md:text-5xl">{t("catTailorTitle")}</h3>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-tech-body md:text-base">{t("catTailorBody")}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/contact" className="btn-machined px-6">
+                {t("catTailorCta")}
+              </Link>
+              <Link href="/services" className="cta-ghost px-6">
+                {t("navServices")}
+              </Link>
             </div>
           </div>
         </div>
-
-        <AnimatePresence mode="wait">
-          {viewType === "grid" ? (
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-            >
-              {pagedProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  lineQuantity={cartItems.find((item) => item.product.id === product.id)?.quantity ?? 0}
-                  onSetLineQuantity={onSetLineQuantity}
-                />
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="list"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="space-y-4"
-            >
-              {pagedProducts.map((product) => (
-                <ProductListRow
-                  key={product.id}
-                  product={product}
-                  lineQuantity={cartItems.find((item) => item.product.id === product.id)?.quantity ?? 0}
-                  onSetLineQuantity={onSetLineQuantity}
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {advancedFilteredProducts.length === 0 && (
-          <div className="flex h-64 flex-col items-center justify-center rounded-xl border-2 border-tech-border border-dashed bg-tech-bg/30 text-tech-muted">
-            <AlertCircle className="mb-2 h-10 w-10 opacity-20" />
-            <p className="font-mono text-xs font-bold uppercase">{t("catEmpty")}</p>
-          </div>
-        )}
-
-        {advancedFilteredProducts.length > 0 && (
-          <div className="mt-10 flex max-w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto overscroll-x-contain pb-2 [-webkit-overflow-scrolling:touch] sm:flex-wrap sm:justify-center">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="h-10 rounded-xl border-2 border-tech-border bg-tech-surface px-3 text-xs font-bold uppercase shadow-hard-sm transition-all hover:-translate-y-0.5 hover:shadow-hard"
-            >
-              {t("catPrev")}
-            </button>
-            {Array.from({ length: totalPages }).map((_, i) => {
-              const p = i + 1;
-              return (
-                <button
-                  type="button"
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={cn(
-                    "h-10 w-10 rounded-xl border-2 border-tech-border text-xs font-bold shadow-hard-sm transition-all hover:-translate-y-0.5 hover:shadow-hard",
-                    currentPage === p ? "bg-primary text-primary-foreground" : "bg-tech-surface"
-                  )}
-                >
-                  {p}
-                </button>
-              );
-            })}
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="h-10 rounded-xl border-2 border-tech-border bg-tech-surface px-3 text-xs font-bold uppercase shadow-hard-sm transition-all hover:-translate-y-0.5 hover:shadow-hard"
-            >
-              {t("catNext")}
-            </button>
-          </div>
-        )}
-
-        <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border-2 border-tech-border bg-tech-surface p-6 shadow-hard">
-            <h3 className="font-display text-2xl font-bold uppercase tracking-tight">{t("catWhyTitle")}</h3>
-            <ul className="mt-4 space-y-2 text-sm font-medium text-tech-text/80">
-              <li>{t("catWhy1")}</li>
-              <li>{t("catWhy2")}</li>
-              <li>{t("catWhy3")}</li>
-            </ul>
-          </div>
-          <div className="brutal-surface-invert rounded-xl border-2 border-tech-muted bg-tech-text p-6 text-white shadow-hard md:p-6">
-            <h3 className="font-display text-2xl font-bold uppercase tracking-tight text-white">{t("catTailorTitle")}</h3>
-            <p className="mt-3 text-sm font-medium text-white/75">{t("catTailorBody")}</p>
-            <Link
-              href="/contact"
-              className="mt-4 inline-flex h-11 items-center justify-center rounded-xl border-2 border-black bg-tech-surface px-6 font-styrene text-xs font-bold uppercase tracking-wider text-black shadow-hard-sm transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-black hover:shadow-hard-hover-primary"
-            >
-              {t("catTailorCta")}
-            </Link>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
@@ -432,3 +450,5 @@ export default function CataloguePage() {
     </AppShell>
   );
 }
+
+

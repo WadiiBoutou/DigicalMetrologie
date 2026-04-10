@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import type { ReactNode } from "react";
 import { Footer, Navbar, WhatsAppFloatButton, type DigicalRoute } from "@/components/digical/shared";
+import { useDigicalI18n } from "@/components/digical/language";
 
 export function AppShell({
   route,
@@ -28,12 +29,21 @@ function AppShellBody({
   cartCount: number;
   children: ReactNode;
 }) {
+  const { lang } = useDigicalI18n();
+  const skipLabel = lang === "AR" ? "???????? ??? ???????" : "Passer au contenu";
+
   return (
     <div className="flex min-h-screen flex-col">
+      <a href="#main-content" className="skip-link">
+        {skipLabel}
+      </a>
       <Navbar cartCount={cartCount} route={route} />
-      <main className="flex-1 flex flex-col">{children}</main>
+      <main id="main-content" className="flex flex-1 flex-col">
+        {children}
+      </main>
       <Footer />
       <WhatsAppFloatButton />
     </div>
   );
 }
+

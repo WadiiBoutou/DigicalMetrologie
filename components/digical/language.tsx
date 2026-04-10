@@ -1,13 +1,11 @@
-"use client";
+﻿"use client";
 
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -39,33 +37,23 @@ const LanguageContext = createContext<LanguageContextValue | undefined>(undefine
 
 type ProviderProps = {
   children: ReactNode;
-  /** From server cookie so first paint matches preference after full reload */
   initialLang: DigicalLanguage;
 };
 
 export function DigicalLanguageProvider({ children, initialLang }: ProviderProps) {
-  const [lang, setLangState] = useState<DigicalLanguage>(() =>
-    initialLang === "AR" ? "AR" : "FR",
-  );
-
-  const didReconcileLs = useRef(false);
-
-  useLayoutEffect(() => {
-    if (didReconcileLs.current) return;
-    didReconcileLs.current = true;
-    try {
-      const fromLs = window.localStorage.getItem(STORAGE_KEY);
-      if (fromLs === "FR" || fromLs === "AR") {
-        setLangState((prev) => {
-          if (fromLs === prev) return prev;
-          writeLanguageCookie(fromLs);
+  const [lang, setLangState] = useState<DigicalLanguage>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const fromLs = window.localStorage.getItem(STORAGE_KEY);
+        if (fromLs === "FR" || fromLs === "AR") {
           return fromLs;
-        });
+        }
+      } catch {
+        /* ignore */
       }
-    } catch {
-      /* ignore */
     }
-  }, []);
+    return initialLang === "AR" ? "AR" : "FR";
+  });
 
   const setLang = useCallback((next: DigicalLanguage) => {
     setLangState(next);
@@ -107,3 +95,4 @@ export function useDigicalI18n() {
   const t = (key: TranslationKey) => translations[key][lang];
   return { lang, setLang, isArabic, t };
 }
+
