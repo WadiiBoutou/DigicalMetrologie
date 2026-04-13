@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { useRef, useLayoutEffect } from "react";
 import {
   ArrowRight,
   CheckCircle2,
@@ -10,7 +10,6 @@ import {
   Factory,
   FlaskConical,
   Leaf,
-  ShieldCheck,
   ShoppingCart,
   Wrench,
   type LucideIcon,
@@ -19,336 +18,247 @@ import { AppShell } from "@/components/digical/AppShell";
 import { PrecisionClock } from "@/components/PrecisionClock";
 import { useDigicalI18n } from "@/components/digical/language";
 import { useDigicalCart } from "@/components/digical/useDigicalCart";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 function HomeContent() {
   const { t } = useDigicalI18n();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const pillarsRef = useRef<HTMLDivElement>(null);
+  const metricsRef = useRef<HTMLDivElement>(null);
 
-  const pillars: Array<{
-    id: string;
-    title: string;
-    desc: string;
-    href: string;
-    icon: LucideIcon;
-  }> = [
-    {
-      id: "vente",
-      title: t("homePillarVenteTitle"),
-      desc: t("homePillarVenteDesc"),
-      href: "/catalogue",
-      icon: ShoppingCart,
-    },
-    {
-      id: "reparation",
-      title: t("homePillarRepTitle"),
-      desc: t("homePillarRepDesc"),
-      href: "/services",
-      icon: Wrench,
-    },
-    {
-      id: "etalonnage",
-      title: t("homePillarEtalTitle"),
-      desc: t("homePillarEtalDesc"),
-      href: "/services",
-      icon: FlaskConical,
-    },
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero Entrance
+      const tl = gsap.timeline();
+      tl.from(".hero-char", {
+        y: 100,
+        opacity: 0,
+        stagger: 0.05,
+        duration: 1,
+        ease: "expo.out",
+      })
+        .from(".hero-sub", { opacity: 0, y: 20 }, "-=0.5")
+        .from(".hero-video", { scale: 1.1, filter: "blur(10px)", duration: 2 }, 0);
+
+      // Scroll Reveal for sections
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+          },
+          y: 60,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+        });
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+  const pillars = [
+    { id: "01", title: t("homePillarVenteTitle"), icon: ShoppingCart, href: "/catalogue" },
+    { id: "02", title: t("homePillarRepTitle"), icon: Wrench, href: "/services" },
+    { id: "03", title: t("homePillarEtalTitle"), icon: FlaskConical, href: "/services" },
   ];
 
-  const kpis = [
-    { value: "15+", label: t("homeKpiL1") },
-    { value: "98.7%", label: t("homeKpiL2") },
-    { value: "24/48h", label: t("homeKpiL3") },
-    { value: "3200+", label: t("homeKpiL4") },
-  ] as const;
-
-  const sectors = [
-    {
-      title: t("homeCard1Title"),
-      blurb: t("homeCard1Blurb"),
-      kicker: t("homeCard1Kicker"),
-      src: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=1200&h=800&fm=jpg&fit=crop&q=80",
-      alt: t("homeCard1Alt"),
-      icon: Factory,
-      href: "/services",
-    },
-    {
-      title: t("homeCard2Title"),
-      blurb: t("homeCard2Blurb"),
-      kicker: t("homeCard2Kicker"),
-      src: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&h=800&fm=jpg&fit=crop&q=80",
-      alt: t("homeCard2Alt"),
-      icon: Leaf,
-      href: "/catalogue",
-    },
-    {
-      title: t("homeCard3Title"),
-      blurb: t("homeCard3Blurb"),
-      kicker: t("homeCard3Kicker"),
-      src: "https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop",
-      alt: t("homeCard3Alt"),
-      icon: Cpu,
-      href: "/expertise",
-    },
-  ] as const;
-
-  const proofPoints = [
-    { quote: t("homeQ1"), name: "Yassine El Idrissi", role: "Responsable qualite · Casablanca" },
-    { quote: t("homeQ2"), name: "Salma Bennani", role: "Cheffe laboratoire · Rabat" },
-    { quote: t("homeQ3"), name: "Mehdi Alaoui", role: "Maintenance industrielle · Tanger" },
-  ] as const;
-
   return (
-    <div className="pb-10 md:pb-16">
-      <section className="relative min-h-[calc(100svh-72px)] overflow-hidden">
-        <div className="absolute inset-0 blueprint-grid">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,13,20,0.76)_0%,rgba(7,13,20,0.62)_36%,rgba(7,13,20,0.2)_62%,rgba(7,13,20,0.74)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(179,38,47,0.32),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(7,13,20,0.3),transparent_24%)]" />
+    <div className="bg-app-bg text-app-text selection:bg-primary selection:text-white overflow-hidden">
+
+      {/* --- LUXE HERO SECTION --- */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6 lg:px-12 pt-20">
+        <div className="absolute inset-0 z-0 hero-video overflow-hidden">
+          <video autoPlay muted loop playsInline className="h-full w-full object-cover opacity-40 grayscale">
+            <source src="/video/video.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-app-bg via-transparent to-app-bg" />
         </div>
 
-        <div className="absolute inset-0">
-          <div className="relative h-full w-full overflow-hidden">
-            <video
-              autoPlay
-              muted
-              playsInline
-              preload="metadata"
-              poster="/video/video-lastframe.jpg"
-              className="h-full w-full object-cover"
-              aria-hidden="true"
-              onEnded={(event) => {
-                event.currentTarget.pause();
-              }}
-            >
-              <source src="/video/video.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,13,20,0.1)_0%,rgba(8,13,20,0.35)_100%)]" />
-          </div>
-        </div>
+        <div className="relative z-10 w-full max-w-[1400px]">
+          <div className="flex flex-col items-start space-y-8">
+            <div className="overflow-hidden">
+              <span className="hero-sub block font-mono text-xs uppercase tracking-[0.5em] text-primary mb-4">
+                High-End Industrial Solutions
+              </span>
+            </div>
+            <h1 className="font-display text-[12vw] sm:text-[10vw] lg:text-[8.5vw] leading-[0.85] tracking-tighter uppercase italic">
+              <span className="hero-char inline-block">{t("homeHeroLine1")}</span><br />
+              <span className="hero-char inline-block text-primary/80 ml-[10vw]">Precision.</span>
+            </h1>
 
-        <div className="relative z-10 flex min-h-[calc(100svh-72px)] items-start">
-          <div className="w-full px-4 pb-10 pt-16 sm:px-6 sm:pb-12 sm:pt-20 md:px-8 md:pb-14 md:pt-24 lg:px-12 lg:pb-16 lg:pt-28">
-            <div className="max-w-4xl">
-              <h1 className="section-title text-5xl text-white sm:text-6xl lg:text-8xl">
-                <span className="block">{t("homeHeroLine1")}</span>
-                <span className="block text-white">
-                  {t("homeHeroLine2Prefix")}
-                  <span className="text-precision">{t("homeHeroLine2Emphasis")}</span>
-                </span>
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-white/78 md:text-lg">
+            <div className="hero-sub flex flex-col md:flex-row gap-12 items-end w-full justify-between pt-12">
+              <p className="max-w-md text-lg text-app-text/60 font-light leading-relaxed border-l border-primary/30 pl-6">
                 {t("homeHeroLead")}
               </p>
-
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/catalogue" className="btn-machined px-6">
+              <div className="flex gap-6">
+                <Link href="/catalogue" className="h-16 px-10 flex items-center bg-primary text-white hover:bg-white hover:text-black transition-all duration-500 rounded-full font-display uppercase text-sm tracking-widest">
                   {t("homeCtaCatalog")}
                 </Link>
-                <Link href="/contact" className="cta-ghost-dark px-6">
-                  {t("homeCtaQuote")}
-                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="px-4 py-6 md:px-8 md:py-8">
-        <div className="mx-auto max-w-7xl space-y-8">
-          <div className="text-center">
-            <span className="section-eyebrow justify-center">{t("homePillarsTitle")}</span>
-          </div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {pillars.map((pillar, index) => (
-              <motion.div
-                key={pillar.id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.35, delay: index * 0.06 }}
-                className="paper-panel p-6 md:p-7"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-[1rem] border border-tech-border bg-primary/6 text-primary">
-                    <pillar.icon className="h-6 w-6" strokeWidth={1.6} />
-                  </div>
-                  <span className="status-pill">0{index + 1}</span>
-                </div>
-                <h2 className="mt-6 font-display text-3xl font-bold uppercase tracking-[-0.05em] text-tech-text">
+      {/* --- PILLARS: MINIMALIST TILES --- */}
+      <section ref={pillarsRef} className="py-32 px-6 lg:px-12">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-px bg-app-border-strong border border-app-border-strong">
+          {pillars.map((pillar) => (
+            <Link
+              href={pillar.href}
+              key={pillar.id}
+              className="reveal group bg-app-bg p-12 lg:p-20 flex flex-col justify-between aspect-[4/5] hover:bg-app-surface transition-colors duration-700"
+            >
+              <div className="space-y-8">
+                <span className="font-mono text-sm text-primary">{pillar.id}</span>
+                <h3 className="font-display text-4xl lg:text-5xl font-light leading-none uppercase tracking-tighter">
                   {pillar.title}
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-tech-body">{pillar.desc}</p>
-                <Link href={pillar.href} className="mt-6 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-                  {t("homePillarMore")}
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                </h3>
+              </div>
+              <div className="flex items-center justify-between">
+                <pillar.icon className="w-12 h-12 stroke-[0.5] text-app-text/30 group-hover:text-primary transition-colors" />
+                <ArrowRight className="w-6 h-6 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
-      <section className="px-4 py-6 md:px-8 md:py-10">
-          <div className="mx-auto max-w-7xl blueprint-panel px-5 py-6 md:px-8 md:py-8">
-          <div className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
-              <div className="max-w-2xl">
-                <span className="section-eyebrow text-white before:bg-white/40">{t("homeKpiKicker")}</span>
-              <h2 className="section-title mt-4 text-4xl text-white md:text-5xl">{t("homeKpiTitle")}</h2>
-                <p className="mt-4 text-sm leading-7 text-white/72 md:text-base">{t("homeKpiLead")}</p>
-              </div>
-            <div className="grid gap-4 sm:grid-cols-2 xl:min-w-[44rem] xl:grid-cols-4">
-                {kpis.map((item) => (
-                <div key={item.label} className="metric-card-dark min-w-0 xl:min-w-[10rem]">
-                  <p className="font-display text-4xl font-bold uppercase tracking-[-0.06em] text-precision">{item.value}</p>
-                    <p className="mt-2 text-sm leading-6 text-white/68">{item.label}</p>
-                  </div>
-                ))}
-              </div>
-          </div>
-        </div>
-      </section>
+      {/* --- TECHNICAL PRECISION METRICS --- */}
+      <section ref={metricsRef} className="py-24 px-6 lg:px-12 bg-app-bg border-y border-app-border">
+        <div className="max-w-[1400px] mx-auto">
 
-      <section className="px-4 py-6 md:px-8 md:py-10">
-          <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
-          <div className="paper-panel p-6 hover:!translate-y-0 hover:!shadow-tech md:p-8">
-            <span className="section-eyebrow">{t("homeProcTitle")}</span>
-            <h2 className="section-title mt-4 text-4xl md:text-5xl">{t("homeProcTitle")}</h2>
-            <p className="section-body mt-5">{t("homeProcLead")}</p>
-            <div className="technical-rule mt-8" />
-            <div className="mt-8 space-y-4">
-              <div className="rounded-[1rem] border border-tech-border bg-white/72 px-5 py-4 shadow-tech-sm">
-                <p className="surface-caption">{t("homeProcSeqTitle")}</p>
-                <p className="mt-2 text-sm leading-7 text-tech-body">
-                  {t("homeProcSeqDesc")}
-                </p>
+          {/* Header Area */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-20 reveal">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.5em] text-primary">
+                <span className="w-8 h-px bg-primary" />
+                System Calibration
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[1rem] border border-tech-border bg-white/72 px-4 py-4 shadow-tech-sm">
-                  <p className="surface-caption">{t("homeProcCadence")}</p>
-                  <p className="mt-2 font-display text-2xl font-bold uppercase tracking-[-0.04em] text-tech-text">{t("homeProcStepsCount")}</p>
-                </div>
-                <div className="rounded-[1rem] border border-tech-border bg-white/72 px-4 py-4 shadow-tech-sm">
-                  <p className="surface-caption">{t("homeProcLivrable")}</p>
-                  <p className="mt-2 font-display text-2xl font-bold uppercase tracking-[-0.04em] text-tech-text">{t("homeProcReporting")}</p>
-                </div>
-              </div>
+              <h2 className="font-display text-6xl lg:text-8xl font-light tracking-tighter leading-none">
+                {t("homeKpiTitle")}
+              </h2>
             </div>
+            <p className="max-w-xs text-sm text-app-text/40 font-light leading-relaxed border-l border-app-border pl-6">
+              {t("homeKpiLead")}
+            </p>
           </div>
 
-            <div className="paper-panel overflow-hidden p-4 hover:!translate-y-0 hover:!shadow-tech md:p-6">
-              <PrecisionClock />
-            </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-6 md:px-8 md:py-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <span className="section-eyebrow">{t("homeCaseKicker")}</span>
-              <h2 className="section-title mt-4 text-4xl md:text-5xl">{t("homeCaseTitle")}</h2>
-            </div>
-            <p className="max-w-2xl text-sm leading-7 text-tech-body md:text-base">{t("homeCaseLead")}</p>
-          </div>
-
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
-            {sectors.map((sector, index) => (
-              <motion.article
-                key={sector.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.35, delay: index * 0.08 }}
-                className="paper-panel overflow-hidden"
+          {/* Metrics Grid with Blueprint Borders */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-app-border reveal overflow-hidden rounded-sm">
+            {[
+              { v: "5+", l: t("homeKpiL1"), tag: "EXP" },
+              { v: "98.7%", l: t("homeKpiL2"), tag: "ACC" },
+              { v: "24h", l: t("homeKpiL3"), tag: "RSP" },
+              { v: "100+", l: t("homeKpiL4"), tag: "CLT" }
+            ].map((k, idx) => (
+              <div
+                key={idx}
+                className="group relative p-12 bg-app-bg hover:bg-app-surface transition-all duration-700 border-r last:border-r-0 border-app-border"
               >
-                <div className="relative h-56 overflow-hidden border-b border-tech-border/70">
-                  <Image
-                    src={sector.src}
-                    alt={sector.alt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(8,13,20,0.92)] via-[rgba(8,13,20,0.18)] to-transparent" />
-                  <div className="absolute inset-x-5 bottom-5 flex items-center justify-between gap-4">
-                    <div>
-                      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/65">{sector.kicker}</p>
-                      <p className="mt-2 font-display text-2xl font-bold uppercase tracking-[-0.05em] text-white">{sector.title}</p>
-                    </div>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/6 text-white">
-                      <sector.icon className="h-5 w-5" strokeWidth={1.6} />
-                    </div>
+                {/* Background Decor */}
+                <div className="absolute top-4 right-6 font-mono text-[9px] text-app-muted opacity-30 group-hover:text-primary transition-colors">
+                  // {k.tag}_0{idx + 1}
+                </div>
+
+                {/* Value */}
+                <div className="relative">
+                  <span className="absolute -left-4 top-0 w-[1px] h-0 group-hover:h-full bg-primary transition-all duration-500" />
+                  <div className="text-6xl lg:text-7xl font-display font-light tracking-tighter text-app-text group-hover:translate-x-2 transition-transform duration-500">
+                    {k.v}
                   </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-sm leading-7 text-tech-body">{sector.blurb}</p>
-                  <Link href={sector.href} className="mt-6 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-                    {t("homePillarMore")}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+
+                {/* Label */}
+                <div className="mt-8 space-y-4">
+                  <div className="h-px w-6 bg-app-border group-hover:w-12 group-hover:bg-primary transition-all duration-500" />
+                  <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-app-muted leading-loose max-w-[120px]">
+                    {k.l}
+                  </div>
                 </div>
-              </motion.article>
+
+                {/* Corner Accent (only visible on hover) */}
+                <div className="absolute bottom-0 right-0 w-0 h-0 border-b-[10px] border-r-[10px] border-transparent group-hover:border-r-primary/20 group-hover:border-b-primary/20 transition-all" />
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Precision Accent */}
+          <div className="mt-12 flex justify-between items-center opacity-20 font-mono text-[8px] tracking-[0.4em] uppercase">
+            <span>Data integrity verified // 2026</span>
+            <div className="flex gap-4">
+              <span>Latency: 0.002ms</span>
+              <span>Status: Optimal</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* --- SECTORS: IMAGE REVEAL --- */}
+      <section className="py-32 px-6 lg:px-12">
+        <div className="max-w-[1400px] mx-auto space-y-32">
+          <div className="flex flex-col lg:flex-row justify-between items-end gap-8 reveal">
+            <h2 className="font-display text-7xl lg:text-9xl tracking-tighter leading-none">
+              Industries <br /> <span className="text-primary italic">We Serve</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {[
+              { t: "Industry", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=1200", icon: Factory },
+              { t: "Agro", img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200", icon: Leaf },
+              { t: "Laboratory", img: "https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=1200", icon: Cpu }
+            ].map((sector, i) => (
+              <div key={i} className="reveal group cursor-pointer">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl mb-8">
+                  <Image
+                    src={sector.img}
+                    fill
+                    alt={sector.t}
+                    className="object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                </div>
+                <div className="flex justify-between items-center border-b border-app-border pb-6">
+                  <h4 className="text-2xl font-display uppercase tracking-tight">{sector.t}</h4>
+                  <sector.icon className="w-5 h-5 opacity-40 group-hover:text-primary group-hover:opacity-100" />
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-4 py-6 md:px-8 md:py-10">
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="paper-panel p-6 md:p-8">
-            <span className="section-eyebrow">{t("homeTrustTitle")}</span>
-            <h2 className="section-title mt-4 text-4xl md:text-5xl">{t("homeTrustTitle")}</h2>
-              <div className="mt-6 space-y-4">
-                {proofPoints.map((item) => (
-                  <div key={item.name} className="rounded-[1rem] border border-tech-border bg-white/76 px-5 py-5 shadow-tech-sm">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                      <div>
-                        <p className="text-sm leading-7 text-tech-body">{item.quote}</p>
-                        <p className="mt-3 font-display text-sm font-bold uppercase tracking-[0.08em] text-tech-text">
-                          {item.name}
-                        </p>
-                        <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-tech-muted">
-                          {item.role}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
+      {/* --- TESTIMONIALS: LUXE MINIMAL --- */}
+      <section className="py-32 px-6 lg:px-12 border-t border-app-border">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
+          <div className="reveal">
+            <span className="section-eyebrow mb-8 inline-block">Testimonials</span>
+            <h2 className="font-display text-6xl tracking-tighter">Trusted by the <br /> best in Morocco.</h2>
           </div>
-
-          <div className="blueprint-panel px-6 py-7 md:px-8 md:py-8">
-            <span className="section-eyebrow text-white before:bg-white/40">{t("homePilotageTitle")}</span>
-            <h2 className="section-title mt-4 text-4xl text-white md:text-5xl">{t("homeCtaBoxTitle")}</h2>
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/72 md:text-base">{t("homeFaq1A")}</p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <div className="metric-card-dark">
-                <p className="dark-caption">{t("homeParcTitle")}</p>
-                <p className="mt-2 text-sm leading-6 text-white/74">{t("homeParcDesc")}</p>
+          <div className="space-y-20">
+            {[
+              { q: t("homeQ1"), n: "Yassine El Idrissi", r: "Quality Manager" },
+              { q: t("homeQ2"), n: "Salma Bennani", r: "Lab Head" }
+            ].map((p, i) => (
+              <div key={i} className="reveal space-y-6">
+                <p className="text-3xl font-light leading-snug italic text-app-text/80">"{p.q}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="h-px w-8 bg-primary" />
+                  <div>
+                    <p className="font-display uppercase text-sm">{p.n}</p>
+                    <p className="text-[10px] uppercase tracking-widest opacity-40">{p.r}</p>
+                  </div>
+                </div>
               </div>
-              <div className="metric-card-dark">
-                <p className="dark-caption">{t("homeTraceTitle")}</p>
-                <p className="mt-2 text-sm leading-6 text-white/74">{t("homeTraceDesc")}</p>
-              </div>
-              <div className="metric-card-dark">
-                <p className="dark-caption">{t("homeTempoTitle")}</p>
-                <p className="mt-2 text-sm leading-6 text-white/74">{t("homeTempoDesc")}</p>
-              </div>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/contact" className="btn-machined px-6">
-                {t("homeCtaBoxPrimary")}
-              </Link>
-              <Link href="/catalogue" className="cta-ghost-dark px-6">
-                {t("homeCtaBoxSecondary")}
-              </Link>
-            </div>
-            <div className="mt-8 rounded-[1.25rem] border border-white/10 bg-white/5 px-5 py-4">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-                <p className="font-display text-base font-bold uppercase tracking-[0.14em] text-white">{t("homeProtocolTitle")}</p>
-              </div>
-              <p className="mt-3 text-sm leading-7 text-white/68">{t("homeProtocolDesc")}</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -364,4 +274,3 @@ export default function HomePage() {
     </AppShell>
   );
 }
-

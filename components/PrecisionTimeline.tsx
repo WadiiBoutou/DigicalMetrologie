@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
@@ -106,22 +106,22 @@ export function PrecisionTimeline() {
   }, [lang]);
 
   return (
-    <section ref={sectionRef} className="relative bento-card overflow-hidden p-4 text-tech-body sm:p-8 md:p-12">
-      <div className="micro-dot-pattern pointer-events-none absolute inset-0 opacity-[0.05]" />
+    <section ref={sectionRef} className="relative paper-panel overflow-hidden p-6 text-app-body sm:p-12 md:p-16 border-app-border-strong bg-app-surface/30">
+      <div className="micro-dot-pattern pointer-events-none absolute inset-0 opacity-[0.03]" />
 
       <div className="relative">
-        <div className="absolute right-10 top-0 h-full w-[2px] bg-tech-border/20 sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2" />
+        <div className="absolute right-10 top-0 h-full w-[2px] bg-app-border sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2" />
         <div ref={lineRef} className="absolute right-10 top-0 h-full w-[2px] bg-primary sm:right-14 md:left-1/2 md:right-auto md:-translate-x-1/2" />
 
-        <div className="space-y-12 md:space-y-24">
+        <div className="space-y-16 md:space-y-32">
           {steps.map((step, index) => {
             const isRight = index % 2 === 1;
             return (
-              <div key={step.id} className="grid grid-cols-[1fr_48px] items-center gap-4 md:grid-cols-[1fr_80px_1fr] md:gap-10">
+              <div key={step.id} className="grid grid-cols-[1fr_48px] items-center gap-6 md:grid-cols-[1fr_100px_1fr] md:gap-16">
                 <div className={isRight ? "md:invisible" : ""}>
-                  <div className="rounded-xl border border-tech-border bg-white/86 p-4 shadow-tech-sm transition-[transform,box-shadow,border-color,background-color] hover:-translate-y-0.5 hover:border-primary/20 hover:bg-white md:p-6 lg:p-8">
-                    <p className="font-display text-lg font-medium uppercase tracking-tight text-tech-text md:text-xl">{step.title}</p>
-                    <p className="mt-2 text-sm font-normal text-tech-muted md:text-base">{step.description}</p>
+                  <div className="rounded-2xl border border-app-border bg-app-bg/50 p-6 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:bg-app-bg md:p-10">
+                    <p className="font-display text-2xl font-light uppercase tracking-tight text-app-text md:text-3xl">{step.title}</p>
+                    <p className="mt-4 text-base font-light leading-relaxed text-app-text/50 md:text-lg">{step.description}</p>
                   </div>
                 </div>
 
@@ -130,23 +130,23 @@ export function PrecisionTimeline() {
                     ref={(el) => {
                       markerWrapRefs.current[index] = el;
                     }}
-                    className="relative flex h-12 w-12 items-center justify-center md:h-16 md:w-16"
+                    className="relative flex h-14 w-14 items-center justify-center md:h-20 md:w-20"
                   >
                     <div
                       ref={(el) => {
                         shapeRefs.current[index] = el;
                       }}
-                      className="absolute inset-0 rounded-lg border border-primary/20 bg-tech-surface shadow-tech-sm"
+                      className="absolute inset-0 rounded-2xl border border-primary/20 bg-app-surface shadow-lg backdrop-blur-md"
                     />
 
-                    <span className="relative z-10 select-none font-mono text-sm font-bold text-primary md:text-base">{step.id}</span>
+                    <span className="relative z-10 select-none font-display text-lg font-light text-primary md:text-xl">{step.id}</span>
                   </div>
                 </div>
 
                 <div className={`hidden md:block ${!isRight ? "md:invisible" : ""}`}>
-                  <div className="rounded-xl border border-tech-border bg-white/86 p-4 shadow-tech-sm transition-[transform,box-shadow,border-color,background-color] hover:-translate-y-0.5 hover:border-primary/20 hover:bg-white md:p-6 lg:p-8">
-                    <p className="font-display text-lg font-medium uppercase tracking-tight text-tech-text md:text-xl">{step.title}</p>
-                    <p className="mt-2 text-sm font-normal text-tech-muted md:text-base">{step.description}</p>
+                  <div className="rounded-2xl border border-app-border bg-app-bg/50 p-6 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:bg-app-bg md:p-10">
+                    <p className="font-display text-2xl font-light uppercase tracking-tight text-app-text md:text-3xl">{step.title}</p>
+                    <p className="mt-4 text-base font-light leading-relaxed text-app-text/50 md:text-lg">{step.description}</p>
                   </div>
                 </div>
               </div>

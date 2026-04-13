@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
@@ -58,7 +58,7 @@ export function PrecisionClock() {
       {/* Background Rings & Circular Progressive Fill */}
       <div className="absolute inset-0 flex items-center justify-center">
         <svg className="absolute h-full w-full -rotate-90" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet">
-           <circle cx="200" cy="200" r={radius} fill="none" stroke="currentColor" strokeWidth="2" className="text-tech-border/10" />
+           <circle cx="200" cy="200" r={radius} fill="none" stroke="currentColor" strokeWidth="2" className="text-app-border/10" />
            <motion.circle
              cx="200"
              cy="200"
@@ -76,8 +76,8 @@ export function PrecisionClock() {
            />
         </svg>
 
-        <div className="h-[55%] w-[55%] rounded-full border-2 border-dashed border-tech-border/20 md:h-[65%] md:w-[65%]" />
-        <div className="absolute h-[75%] w-[75%] rounded-full border border-tech-border/10 md:h-[85%] md:w-[85%]" />
+        <div className="h-[55%] w-[55%] rounded-full border-2 border-dashed border-app-border/20 md:h-[65%] md:w-[65%]" />
+        <div className="absolute h-[75%] w-[75%] rounded-full border border-app-border/10 md:h-[85%] md:w-[85%]" />
       </div>
 
       {/* Ticking Needle */}
@@ -140,7 +140,7 @@ export function PrecisionClock() {
               "relative flex h-14 w-14 flex-shrink-0 items-center justify-center !rounded-full border-2 transition-all duration-500 sm:h-16 sm:w-16 md:h-[72px] md:w-[72px]",
               isStayedActive 
                 ? "bg-primary border-primary shadow-hard" 
-                : "bg-white border-tech-border shadow-tech-sm"
+                : "bg-app-surface border-app-border shadow-sm"
             )}>
                <step.icon className={cn(
                  "h-6 w-6 transition-colors duration-500 sm:h-8 sm:w-8 md:h-9 md:w-9", 
@@ -148,8 +148,8 @@ export function PrecisionClock() {
                )} />
                
                <div className={cn(
-                 "absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-none border-2 border-tech-border bg-white font-mono text-[10px] font-black text-tech-text sm:h-7 sm:w-7 sm:text-[11px] md:h-8 md:w-8 md:text-sm",
-                 isStayedActive && "bg-white text-primary border-primary shadow-tech-sm"
+                 "absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-none border-2 border-app-border bg-app-surface font-mono text-[10px] font-black text-app-text sm:h-7 sm:w-7 sm:text-[11px] md:h-8 md:w-8 md:text-sm",
+                 isStayedActive && "bg-app-surface text-primary border-primary shadow-sm"
                )}>
                  {step.id}
                </div>
@@ -157,16 +157,16 @@ export function PrecisionClock() {
 
             {/* Content Card */}
             <div className={cn(
-              "absolute w-[108px] flex-shrink-0 rounded-2xl border-2 border-tech-border p-2 text-center transition-all duration-500 sm:w-[126px] sm:p-3 md:w-[146px]",
+              "absolute w-[108px] flex-shrink-0 rounded-2xl border-2 border-app-border p-2 text-center transition-all duration-500 sm:w-[126px] sm:p-3 md:w-[146px]",
               posConfigs.card,
               isStayedActive
-                ? "bg-white border-primary shadow-tech"
-                : "border-tech-border bg-white/88 shadow-tech-sm backdrop-blur-md",
+                ? "bg-app-surface border-primary shadow-lg"
+                : "border-app-border bg-app-surface/80 shadow-sm backdrop-blur-md",
               isAR ? "rtl" : "ltr"
             )}>
               <p className={cn(
                 "text-[9px] font-black uppercase leading-[1.15] tracking-tight transition-colors duration-500 sm:text-[10px] md:text-[11px]",
-                isStayedActive ? "text-primary" : "text-tech-muted"
+                isStayedActive ? "text-primary" : "text-app-muted"
               )}>
                 {step.title}
               </p>

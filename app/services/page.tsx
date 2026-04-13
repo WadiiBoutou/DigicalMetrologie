@@ -22,34 +22,47 @@ function ServiceHero() {
   const { t } = useDigicalI18n();
 
   return (
-    <section className="px-4 pb-6 pt-6 md:px-8 md:pb-8 md:pt-8">
-      <div className="mx-auto max-w-7xl blueprint-panel px-5 py-7 md:px-8 md:py-8 lg:px-10 lg:py-10">
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div>
-            <span className="status-pill-dark">Services techniques · Precision operations</span>
-            <h1 className="section-title mt-5 text-5xl text-white sm:text-6xl lg:text-[5.2rem]">{t("srvHeroTitle")}</h1>
-            <p className="mt-5 max-w-3xl text-base leading-8 text-white/72 md:text-lg">{t("srvHeroLead")}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/contact" className="btn-machined px-6">
-                {t("srvBannerStart")}
-              </Link>
-              <Link href="/catalogue" className="cta-ghost-dark px-6">
-                {t("navCatalog")}
-              </Link>
+    <section className="relative pt-32 pb-20 px-6 lg:px-12 bg-app-bg overflow-hidden border-b border-app-border transition-colors duration-500">
+      {/* Dynamic Grid Background - Adaptable to light/dark */}
+      <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.03] pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+      <div className="max-w-[1400px] mx-auto relative z-10">
+        <div className="flex flex-col lg:flex-row gap-20 items-end">
+          <div className="flex-1">
+            <div className="flex items-center gap-4 mb-8">
+              <span className="w-12 h-px bg-primary" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-primary">
+                Technical Solutions // 2026
+              </span>
             </div>
+
+            <h1 className="font-display text-7xl lg:text-[9rem] leading-[0.85] uppercase tracking-tighter text-app-text transition-colors">
+              {t("srvHeroTitle").split(' ')[0]} <br />
+              <span className="text-primary italic font-light drop-shadow-sm">
+                {t("srvHeroTitle").split(' ')[1] || "Services"}
+              </span>
+            </h1>
+
+            <p className="mt-12 max-w-xl text-xl text-app-text/60 font-light leading-relaxed">
+              {t("srvHeroLead")}
+            </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              { value: "01", label: t("homePillarVenteTitle") },
-              { value: "02", label: t("srvRepairTitle") },
-              { value: "03", label: t("homePillarEtalTitle") },
-            ].map((item) => (
-              <div key={item.label} className="metric-card-dark">
-                <p className="font-display text-3xl font-bold uppercase tracking-[-0.05em] text-precision">{item.value}</p>
-                <p className="mt-3 text-sm leading-6 text-white/68">{item.label}</p>
-              </div>
-            ))}
+          {/* Quick Nav / Indicators */}
+          <div className="w-full lg:w-1/3 border-l border-app-border-strong pl-12">
+            <div className="space-y-2">
+              {[
+                { v: "01", l: t("homePillarVenteTitle") },
+                { v: "02", l: t("srvRepairTitle") },
+                { v: "03", l: t("homePillarEtalTitle") },
+              ].map((item) => (
+                <div key={item.v} className="group py-5 flex items-center justify-between border-b border-app-border last:border-0 hover:translate-x-2 transition-all duration-500 cursor-default">
+                  <span className="font-mono text-3xl text-app-text/10 group-hover:text-primary/30 transition-colors">{item.v}</span>
+                  <span className="font-display text-xs uppercase tracking-[0.2em] text-app-text/40 group-hover:text-app-text transition-colors">{item.l}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -57,225 +70,134 @@ function ServiceHero() {
   );
 }
 
-type ServiceBand = {
-  id: string;
-  title: string;
-  lead: string;
-  badge: string;
-  href: string;
-  icon: LucideIcon;
-  imageSrc: string;
-  imageAlt: string;
-  middle: string[];
-  specs: Array<{ label: string; value: string }>;
-};
-
 function ServicesContent() {
   const { t } = useDigicalI18n();
 
-  const bands: ServiceBand[] = [
+  const bands = [
     {
       id: "vente",
       title: t("homePillarVenteTitle"),
       lead: t("catTailorBody"),
-      badge: t("catSupportTitle"),
-      href: "/catalogue",
+      badge: "Commercial / Unit",
       icon: Factory,
-      imageSrc:
-        "https://images.pexels.com/photos/36003973/pexels-photo-36003973.jpeg?cs=srgb&dl=pexels-michael-orshan-2159363670-36003973.jpg&fm=jpg",
-      imageAlt: "Instrument de mesure de precision et materiel technique",
-      middle: [t("srvPackEss1"), t("srvPackOp1"), t("srvPackPerf1")],
-      specs: [
-        { label: "Parcours", value: t("catHeadingTous") },
-        { label: "Support", value: t("catExpertLink") },
-        { label: "Couverture", value: `${t("catSectorIndustrial")} / ${t("catSectorFarm")}` },
-      ],
+      imageSrc: "https://images.pexels.com/photos/36003973/pexels-photo-36003973.jpeg",
     },
     {
       id: "reparation",
       title: t("srvRepairTitle"),
       lead: t("srvRepairLead"),
-      badge: "Maintenance protocol",
-      href: "/contact",
+      badge: "Technical / Maintenance",
       icon: Wrench,
-      imageSrc:
-        "https://images.pexels.com/photos/35072819/pexels-photo-35072819.jpeg?cs=srgb&dl=pexels-bulat843-1243575272-35072819.jpg&fm=jpg",
-      imageAlt: "Technicien intervenant sur une machine industrielle",
-      middle: [t("srvRepD1"), t("srvRepD2"), t("srvRepD3"), t("srvRepD4")],
-      specs: [
-        { label: t("srvRepT1"), value: "01" },
-        { label: t("srvRepT2"), value: "02" },
-        { label: t("srvRepT3"), value: "03" },
-        { label: t("srvRepT4"), value: "04" },
-      ],
+      imageSrc: "https://images.pexels.com/photos/35072819/pexels-photo-35072819.jpeg",
     },
     {
       id: "etalonnage",
       title: t("homePillarEtalTitle"),
       lead: t("srvLabLead"),
-      badge: "Calibration stack",
-      href: "/contact",
+      badge: "Precision / Laboratory",
       icon: FlaskConical,
-      imageSrc:
-        "https://images.pexels.com/photos/8940466/pexels-photo-8940466.jpeg?cs=srgb&dl=pexels-thirdman-8940466.jpg&fm=jpg",
-      imageAlt: "Equipement de laboratoire et banc d etalonnage",
-      middle: [t("srvLabV1"), t("srvLabV2"), t("srvLabV3"), t("srvLabV4")],
-      specs: [
-        { label: t("srvLabK1"), value: t("srvLabV1") },
-        { label: t("srvLabK2"), value: t("srvLabV2") },
-        { label: t("srvLabK3"), value: t("srvLabV3") },
-        { label: t("srvLabK4"), value: t("srvLabV4") },
-      ],
+      imageSrc: "https://images.pexels.com/photos/8940466/pexels-photo-8940466.jpeg",
     },
   ];
 
-  const cycle = [t("srvCycle1"), t("srvCycle2"), t("srvCycle3"), t("srvCycle4"), t("srvCycle5")];
-  const environments = [t("srvEnv1"), t("srvEnv2"), t("srvEnv3"), t("srvEnv4"), t("srvEnv5"), t("srvEnv6"), t("srvEnv7"), t("srvEnv8")];
-
   return (
-    <div className="pb-10 md:pb-16">
+    <div className="bg-app-bg text-app-text transition-colors duration-500">
       <ServiceHero />
 
-      <section className="px-4 py-4 md:px-8 md:py-6">
-        <div className="mx-auto max-w-7xl space-y-6">
+      <section className="py-32 px-6 lg:px-12">
+        <div className="max-w-[1400px] mx-auto space-y-48">
           {bands.map((band, index) => (
-            <motion.article
+            <motion.div
               key={band.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.35, delay: index * 0.05 }}
-              className="paper-panel overflow-hidden"
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "circOut" }}
+              className={`flex flex-col ${index % 2 !== 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-32 items-center`}
             >
-              <div className="grid gap-0 lg:grid-cols-[0.9fr_0.9fr_0.8fr]">
-                <div className="relative min-h-[320px] overflow-hidden border-b border-tech-border/70 lg:border-b-0 lg:border-e">
-                  <Image
-                    src={band.imageSrc}
-                    alt={band.imageAlt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 30vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(8,13,20,0.92)] via-[rgba(8,13,20,0.18)] to-transparent" />
-                  <div className="absolute inset-x-5 bottom-5">
-                    <span className="status-pill-dark">{band.badge}</span>
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/14 bg-white/8 text-white">
-                        <band.icon className="h-5 w-5" strokeWidth={1.6} />
-                      </div>
-                      <h2 className="font-display text-3xl font-bold uppercase tracking-[-0.05em] text-white md:text-4xl">
-                        {band.title}
-                      </h2>
-                    </div>
+              {/* Image Frame with Technical Border */}
+              <div className="flex-1 relative h-[600px] w-full overflow-hidden group shadow-2xl">
+                <Image
+                  src={band.imageSrc}
+                  alt={band.title}
+                  fill
+                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100"
+                />
+                <div className="absolute inset-0 border-[20px] border-app-bg transition-all duration-700 group-hover:border-[10px]" />
+                <div className="absolute bottom-12 right-12 p-4 bg-app-bg border border-app-border-strong text-primary font-mono text-[9px] uppercase tracking-widest translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                  Data.Node // 0{index + 1}
+                </div>
+              </div>
+
+              {/* Technical Content Side */}
+              <div className="flex-1 space-y-12">
+                <div className="space-y-6">
+                  <div className="inline-block px-4 py-1 border border-primary/20 bg-primary/5 text-primary font-mono text-[9px] uppercase tracking-[0.3em]">
+                    {band.badge}
                   </div>
+                  <h2 className="font-display text-6xl lg:text-7xl font-light uppercase tracking-tighter leading-[0.9] text-app-text">
+                    {band.title}
+                  </h2>
                 </div>
 
-                <div className="p-6 md:p-7">
-                  <p className="surface-caption">{t("srvScopeTitle") || "Engineer-ready scope"}</p>
-                  <p className="mt-4 text-sm leading-7 text-tech-body md:text-base">{band.lead}</p>
-                  <div className="mt-6 space-y-3">
-                    {band.middle.map((item, itemIndex) => (
-                      <div key={item} className="flex items-start gap-3 rounded-[1rem] border border-tech-border bg-white/76 px-4 py-4 shadow-tech-sm">
-                        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-white">
-                          0{itemIndex + 1}
-                        </span>
-                        <p className="text-sm leading-7 text-tech-body">{item}</p>
+                <p className="text-xl text-app-text/50 font-light leading-relaxed max-w-lg">
+                  {band.lead}
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center pt-10 border-t border-app-border">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-8 h-8 rounded-full border-2 border-app-bg bg-app-surface flex items-center justify-center">
+                        <div className="w-1 h-1 rounded-full bg-primary" />
                       </div>
                     ))}
                   </div>
-                </div>
-
-                <div className="blueprint-panel m-4 px-5 py-5 md:m-6 md:px-6 md:py-6">
-                  <p className="dark-caption">{t("prodSpecsTitle")}</p>
-                  <div className="mt-5 space-y-3">
-                    {band.specs.map((spec) => (
-                      <div key={spec.label} className="rounded-[1rem] border border-white/10 bg-white/5 px-4 py-4">
-                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/52">{spec.label}</p>
-                        <p className="mt-2 font-display text-base font-bold uppercase tracking-[-0.03em] text-white">{spec.value}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <Link href={band.href} className="btn-machined mt-6 w-full justify-center">
-                    {band.id === "vente" ? t("navCatalog") : t("quote")}
-                    <ArrowRight className="h-4 w-4" />
+                  <div className="h-px w-12 bg-app-border hidden sm:block" />
+                  <Link
+                    href="/contact"
+                    className="group relative flex items-center gap-12 px-8 py-5 bg-app-surface border border-app-border-strong hover:border-primary transition-all duration-500 overflow-hidden"
+                  >
+                    <span className="relative z-10 font-display text-xs uppercase tracking-widest">{t("quote")}</span>
+                    <ArrowRight className="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-2" />
+                    <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                   </Link>
                 </div>
               </div>
-            </motion.article>
+            </motion.div>
           ))}
         </div>
       </section>
 
-      <section className="px-4 py-6 md:px-8 md:py-10">
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.88fr_1.12fr]">
-          <div className="paper-panel p-6 md:p-8">
-            <span className="section-eyebrow">{t("srvCycleTitle")}</span>
-            <h3 className="section-title mt-4 text-4xl md:text-5xl">{t("srvCycleTitle")}</h3>
-            <div className="mt-6 space-y-3">
-              {cycle.map((line, index) => (
-                <div key={line} className="flex items-start gap-3 rounded-[1rem] border border-tech-border bg-white/76 px-4 py-4 shadow-tech-sm">
-                  <Search className="mt-1 h-4 w-4 shrink-0 text-primary" />
-                  <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-tech-muted">0{index + 1}</p>
-                    <p className="mt-1 text-sm leading-7 text-tech-body">{line}</p>
+      {/* Environments Section: The Grid Console */}
+      <section className="py-32 bg-app-surface/50 border-t border-app-border">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div className="grid lg:grid-cols-12 gap-20">
+            <div className="lg:col-span-5">
+              <div className="font-mono text-[10px] text-primary mb-6 uppercase tracking-[0.4em] flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                Live Network Scope
+              </div>
+              <h3 className="font-display text-5xl lg:text-7xl uppercase tracking-tighter leading-none mb-12">
+                Operational <br /> <span className="italic font-light opacity-50 text-app-text">Sectors</span>
+              </h3>
+              <p className="text-lg text-app-text/40 font-light max-w-md leading-relaxed">
+                {t("srvEnvLead")}
+              </p>
+            </div>
+
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[t("srvEnv1"), t("srvEnv2"), t("srvEnv3"), t("srvEnv4"), t("srvEnv5"), t("srvEnv6")].map((env, i) => (
+                <div key={env} className="group p-8 bg-app-bg border border-app-border hover:border-primary/40 transition-all duration-500">
+                  <div className="flex justify-between items-start mb-12">
+                    <span className="font-mono text-[9px] text-app-text/20">LOG_ID: 0x0{i}</span>
+                    <div className="w-1 h-1 bg-app-border group-hover:bg-primary transition-colors" />
                   </div>
+                  <h4 className="font-display text-xl uppercase tracking-tight group-hover:translate-x-2 transition-transform duration-500">
+                    {env}
+                  </h4>
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="blueprint-panel px-6 py-7 md:px-8 md:py-8">
-            <div>
-              <span className="section-eyebrow text-white before:bg-white/40">{t("srvEnvTitle")}</span>
-              <div className="mt-4 max-w-4xl">
-                <h3 className="section-title text-4xl text-white md:text-5xl">{t("srvEnvTitle")}</h3>
-                <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72 md:text-base">{t("srvEnvLead")}</p>
-              </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
-                {environments.map((item) => (
-                  <div
-                    key={item}
-                    className="flex min-h-[76px] items-center rounded-[1rem] border border-white/10 bg-white/5 px-4 py-4 text-sm leading-6 text-white/74"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-6 md:px-8 md:py-10">
-        <div className="mx-auto max-w-7xl blueprint-panel px-6 py-7 md:px-8 md:py-8">
-          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-              <span className="section-eyebrow text-white before:bg-white/40">Service banner</span>
-              <h3 className="section-title mt-4 text-4xl text-white md:text-5xl">{t("srvBannerTitle")}</h3>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72 md:text-base">{t("srvBannerLead")}</p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
-              <div className="metric-card-dark">
-                <FileCheck className="h-5 w-5 text-primary" />
-                <p className="mt-4 text-sm leading-6 text-white/74">{t("srvStructDoc")}</p>
-              </div>
-              <div className="metric-card-dark">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-                <p className="mt-4 text-sm leading-6 text-white/74">{t("srvCritProtocol")}</p>
-              </div>
-              <div className="metric-card-dark">
-                <Settings2 className="h-5 w-5 text-primary" />
-                <p className="mt-4 text-sm leading-6 text-white/74">{t("srvFastDecisions")}</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/contact" className="btn-machined px-6">
-              {t("srvBannerStart")}
-            </Link>
-            <Link href="/expertise" className="cta-ghost-dark px-6">
-              {t("srvBannerExpertise")}
-            </Link>
           </div>
         </div>
       </section>
@@ -291,4 +213,3 @@ export default function ServicesPage() {
     </AppShell>
   );
 }
-

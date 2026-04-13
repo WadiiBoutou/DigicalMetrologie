@@ -107,7 +107,7 @@ export const metadata: Metadata = {
   },
 };
 
-/** Matches `:root --app-bg` in `app/globals.css` (Tailwind `bg-tech-bg`). */
+/** Matches `:root --app-bg` in `app/globals.css` (Tailwind `bg-app-bg`). */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -149,17 +149,19 @@ export default async function RootLayout({
       className={`${alexandria.variable} ${manrope.variable} ${cairo.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <head>
-        <script
+        <Script
           id="language-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: languageInitScript }}
         />
         <Script
           id="json-ld-digical"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full bg-tech-bg font-sans text-tech-body">
+      <body className="min-h-full bg-app-bg font-sans text-app-body">
         <DigicalRootProviders initialLang={initialLang}>
           {children}
         </DigicalRootProviders>

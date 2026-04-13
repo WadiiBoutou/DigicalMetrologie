@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { DigicalLanguageProvider, type DigicalLanguage } from "@/components/digical/language";
+import { ThemeProvider } from "next-themes";
 
 export function DigicalRootProviders({
   children,
@@ -10,5 +11,11 @@ export function DigicalRootProviders({
   children: ReactNode;
   initialLang: DigicalLanguage;
 }) {
-  return <DigicalLanguageProvider initialLang={initialLang}>{children}</DigicalLanguageProvider>;
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <DigicalLanguageProvider initialLang={initialLang}>
+        {children}
+      </DigicalLanguageProvider>
+    </ThemeProvider>
+  );
 }

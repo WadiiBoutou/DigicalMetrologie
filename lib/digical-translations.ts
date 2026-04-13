@@ -277,6 +277,7 @@ export const digicalTranslations = {
   },
   contactBackForm: { FR: "Retour au formulaire", AR: "العودة إلى الاستمارة" },
   contactCartTitle: { FR: "Panier de Chiffrage", AR: "سلة التسعير" },
+  contactCollaborate: { FR: "Collaborate?", AR: "تعاون؟" },
   contactCartEmpty: { FR: "Votre panier est vide.", AR: "سلتك فارغة." },
   contactExploreCat: { FR: "Explorer le catalogue", AR: "استكشف الكتالوج" },
   contactQtyShort: { FR: "Qté", AR: "الكمية" },
